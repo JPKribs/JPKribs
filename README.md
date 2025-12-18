@@ -30,7 +30,9 @@
   </a>
 </p>
 
-📍 Littleton, Colorado  
+<p align="center">
+  📍 Littleton, Colorado
+</p>
 
 ---
 
