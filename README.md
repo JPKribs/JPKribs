@@ -33,18 +33,3 @@
 <p align="center">
   📍 Littleton, Colorado
 </p>
-
----
-
-## Statistics
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="https://github-readme-stats.vercel.app/api?username=JPKribs&show_icons=true&count_private=true&theme=radical" width="450" />
-    </td>
-    <td align="center">
-      <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=JPKribs&layout=compact&theme=radical" width="350" />
-    </td>
-  </tr>
-</table>
