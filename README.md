@@ -1,7 +1,7 @@
 # Joe Kribs
 
 <p align="center">
-  Jellyfin Team Member | Client Team
+  Jellyfin Team Member | Swiftfin Maintainer
 </p>
 
 <!-- Repo Badges -->
