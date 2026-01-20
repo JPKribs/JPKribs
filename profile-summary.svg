@@ -1,89 +1,22 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2867
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+<svg width="800" height="320" viewBox="0 0 800 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="320" rx="12" fill="#0d1117" stroke="#30363d"/>
+  
+  <text x="400" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#f0f6fc">Joe Kribs</text>
+  <text x="400" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#8b949e">Jellyfin Team Member • Swiftfin Co-Maintainer</text>
 
-\f0\fs24 \cf0 <svg fill="none" viewBox="0 0 800 240" width="800" height="240" xmlns="http://www.w3.org/2000/svg">\
-  <foreignObject width="100%" height="100%">\
-    <div xmlns="http://www.w3.org/1999/xhtml">\
-      <style>\
-        .container \{\
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;\
-          background: #0d1117;\
-          border: 1px solid #30363d;\
-          border-radius: 12px;\
-          padding: 30px;\
-          text-align: center;\
-          color: #c9d1d9;\
-        \}\
-        .name \{\
-          font-size: 32px;\
-          font-weight: 700;\
-          color: #f0f6fc;\
-          margin-bottom: 4px;\
-        \}\
-        .role \{\
-          font-size: 16px;\
-          color: #8b949e;\
-          margin-bottom: 24px;\
-        \}\
-        .section-label \{\
-          font-size: 10px;\
-          text-transform: uppercase;\
-          letter-spacing: 1px;\
-          color: #484f58;\
-          margin-bottom: 12px;\
-        \}\
-        .badge-row \{\
-          display: flex;\
-          justify-content: center;\
-          gap: 10px;\
-          margin-bottom: 20px;\
-        \}\
-        .badge \{\
-          background: #161b22;\
-          border: 1px solid #30363d;\
-          border-radius: 6px;\
-          padding: 6px 12px;\
-          font-size: 13px;\
-          display: flex;\
-          align-items: center;\
-          color: #f0f6fc;\
-          text-decoration: none;\
-        \}\
-        .dot \{\
-          height: 8px;\
-          width: 8px;\
-          border-radius: 50%;\
-          display: inline-block;\
-          margin-right: 8px;\
-        \}\
-        .location \{\
-          font-size: 12px;\
-          color: #8b949e;\
-          margin-top: 10px;\
-        \}\
-      </style>\
-      <div class="container">\
-        <div class="name">Joe Kribs</div>\
-        <div class="role">Jellyfin Team Member \'95 Swiftfin Co-Maintainer</div>\
-        \
-        <div class="badge-row">\
-          <div class="badge"><span class="dot" style="background: #00add8;"></span>Discovery Proxy</div>\
-          <div class="badge"><span class="dot" style="background: #512bd4;"></span>Poster Generator</div>\
-          <div class="badge"><span class="dot" style="background: #f05138;"></span>Swiftfin</div>\
-        </div>\
-\
-        <div class="badge-row">\
-          <div class="badge">\uc0\u55356 \u57104  Website</div>\
-          <div class="badge">\uc0\u9993 \u65039  Email</div>\
-          <div class="badge">\uc0\u55357 \u56492  Reddit</div>\
-        </div>\
-        \
-        <div class="location">\uc0\u55357 \u56525  Littleton, Colorado</div>\
-      </div>\
-    </div>\
-  </foreignObject>\
-</svg>}
+  <rect x="50" y="130" width="220" height="100" rx="8" fill="#161b22" stroke="#F05138" stroke-width="1.5"/>
+  <text x="160" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#f0f6fc">Swiftfin</text>
+  <text x="160" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#8b949e">⭐ 3.2k Stars</text>
+
+  <rect x="290" y="130" width="220" height="100" rx="8" fill="#161b22" stroke="#00ADD8" stroke-width="1.5"/>
+  <text x="400" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#f0f6fc">Discovery Proxy</text>
+  <text x="400" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#8b949e">⭐ 45 Stars</text>
+
+  <rect x="530" y="130" width="220" height="100" rx="8" fill="#161b22" stroke="#512BD4" stroke-width="1.5"/>
+  <text x="640" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#f0f6fc">Poster Generator</text>
+  <text x="640" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#8b949e">⭐ 120 Stars</text>
+
+  <line x1="50" y1="265" x2="750" y2="265" stroke="#30363d" />
+  <text x="50" y="295" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">🌐 joseph.kribs.net  •  ✉️ joseph@kribs.net</text>
+  <text x="750" y="295" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">📍 Littleton, CO • Jan 2026</text>
+</svg>
