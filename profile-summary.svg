@@ -5,19 +5,19 @@
   <text x="400" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#8b949e">Jellyfin Team Member • Swiftfin Co-Maintainer</text>
 
   <rect x="50" y="130" width="220" height="120" rx="8" fill="#161b22" stroke="#F05138" stroke-width="1.5"/>
-  <image x="145" y="145" width="30" height="30" href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Swift_logo.svg/2560px-Swift_logo.svg"/>
+  <image x="145" y="145" width="30" height="30" href="https://github.com/JPKribs/JPKribs/blob/main/Swift.svg"/>
   <text x="160" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#f0f6fc">Swiftfin</text>
   <text x="160" y="212" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#F05138">Swift</text>
   <text x="160" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#8b949e">⭐ 3.6K Stars</text>
 
   <rect x="290" y="130" width="220" height="120" rx="8" fill="#161b22" stroke="#00ADD8" stroke-width="1.5"/>
-  <image x="385" y="145" width="30" height="30" href="https://upload.wikimedia.org/wikipedia/commons/0/05/Go_Logo_Blue.svg"/>
+  <image x="385" y="145" width="30" height="30" href="https://github.com/JPKribs/JPKribs/blob/main/Go.svg"/>
   <text x="400" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#f0f6fc">Discovery Proxy</text>
   <text x="400" y="212" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#00ADD8">Go</text>
   <text x="400" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#8b949e">⭐ 7 Stars</text>
 
   <rect x="530" y="130" width="220" height="120" rx="8" fill="#161b22" stroke="#512BD4" stroke-width="1.5"/>
-  <image x="625" y="145" width="30" height="30" href="https://upload.wikimedia.org/wikipedia/commons/7/7d/Microsoft_.NET_logo.svg"/>
+  <image x="625" y="145" width="30" height="30" href="https://github.com/JPKribs/JPKribs/blob/main/C%23.svg"/>
   <text x="640" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#f0f6fc">Poster Generator</text>
   <text x="640" y="212" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#512BD4">.NET</text>
   <text x="640" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#8b949e">⭐ 7 Stars</text>
