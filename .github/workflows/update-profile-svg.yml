@@ -33,22 +33,48 @@ jobs:
 
           # Fetch real GitHub activity data
           chmod +x .github/scripts/fetch-github-stats.sh
-          source <(.github/scripts/fetch-github-stats.sh)
+          eval "$(.github/scripts/fetch-github-stats.sh)"
 
           # Debug output
           echo "TOTAL_COMMITS=$TOTAL_COMMITS"
           echo "YEAR_COMMITS=$YEAR_COMMITS"
           echo "CURRENT_YEAR=$CURRENT_YEAR"
           echo "BEST_STREAK=$BEST_STREAK"
-          echo "TOP_LANGS=$TOP_LANGS"
+          echo "TOTAL_POSTS=$TOTAL_POSTS"
+          echo "TOTAL_REPLIES=$TOTAL_REPLIES"
+          echo "TOTAL_DISCUSSIONS=$TOTAL_DISCUSSIONS"
+          echo "LANG1_LINE=$LANG1_LINE"
+          echo "LANG2_LINE=$LANG2_LINE"
+          echo "LANG3_LINE=$LANG3_LINE"
 
-          # Parse top 3 languages
-          LANG1_NAME=$(echo "$TOP_LANGS" | sed -n '1p' | awk '{print $2}')
-          LANG1_PCT=$(echo "$TOP_LANGS" | sed -n '1p' | awk '{print $1}')
-          LANG2_NAME=$(echo "$TOP_LANGS" | sed -n '2p' | awk '{print $2}')
-          LANG2_PCT=$(echo "$TOP_LANGS" | sed -n '2p' | awk '{print $1}')
-          LANG3_NAME=$(echo "$TOP_LANGS" | sed -n '3p' | awk '{print $2}')
-          LANG3_PCT=$(echo "$TOP_LANGS" | sed -n '3p' | awk '{print $1}')
+          # Set defaults if empty
+          TOTAL_COMMITS=${TOTAL_COMMITS:-0}
+          YEAR_COMMITS=${YEAR_COMMITS:-0}
+          CURRENT_YEAR=${CURRENT_YEAR:-2026}
+          BEST_STREAK=${BEST_STREAK:-0}
+          TOTAL_POSTS=${TOTAL_POSTS:-0}
+          TOTAL_REPLIES=${TOTAL_REPLIES:-0}
+          TOTAL_DISCUSSIONS=${TOTAL_DISCUSSIONS:-0}
+
+          # Parse top 3 languages from the lines
+          LANG1_NAME=$(echo "$LANG1_LINE" | awk '{print $2}')
+          LANG1_PCT=$(echo "$LANG1_LINE" | awk '{print $1}')
+          LANG2_NAME=$(echo "$LANG2_LINE" | awk '{print $2}')
+          LANG2_PCT=$(echo "$LANG2_LINE" | awk '{print $1}')
+          LANG3_NAME=$(echo "$LANG3_LINE" | awk '{print $2}')
+          LANG3_PCT=$(echo "$LANG3_LINE" | awk '{print $1}')
+
+          # Set defaults for languages
+          LANG1_NAME=${LANG1_NAME:-"Unknown"}
+          LANG1_PCT=${LANG1_PCT:-0}
+          LANG2_NAME=${LANG2_NAME:-"Unknown"}
+          LANG2_PCT=${LANG2_PCT:-0}
+          LANG3_NAME=${LANG3_NAME:-"Unknown"}
+          LANG3_PCT=${LANG3_PCT:-0}
+
+          echo "LANG1: $LANG1_NAME ($LANG1_PCT%)"
+          echo "LANG2: $LANG2_NAME ($LANG2_PCT%)"
+          echo "LANG3: $LANG3_NAME ($LANG3_PCT%)"
 
           # Calculate bar widths (out of 196px max width)
           LANG1_WIDTH=$((LANG1_PCT * 196 / 100))

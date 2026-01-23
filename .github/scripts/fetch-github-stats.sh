@@ -111,12 +111,16 @@ DISCUSSIONS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
   jq -r '.total_count // 0' 2>/dev/null)
 TOTAL_DISCUSSIONS=${DISCUSSIONS:-0}
 
-# Export data for use in workflow
-export TOTAL_COMMITS=${TOTAL_COMMITS}
-export YEAR_COMMITS=${YEAR_COMMITS}
-export CURRENT_YEAR=${CURRENT_YEAR}
-export BEST_STREAK=${BEST_STREAK}
-export TOTAL_POSTS=${TOTAL_POSTS}
-export TOTAL_REPLIES=${TOTAL_REPLIES}
-export TOTAL_DISCUSSIONS=${TOTAL_DISCUSSIONS}
-export TOP_LANGS="$TOP_LANGS"
+# Output data for use in workflow (without export, just echo)
+echo "TOTAL_COMMITS=${TOTAL_COMMITS}"
+echo "YEAR_COMMITS=${YEAR_COMMITS}"
+echo "CURRENT_YEAR=${CURRENT_YEAR}"
+echo "BEST_STREAK=${BEST_STREAK}"
+echo "TOTAL_POSTS=${TOTAL_POSTS}"
+echo "TOTAL_REPLIES=${TOTAL_REPLIES}"
+echo "TOTAL_DISCUSSIONS=${TOTAL_DISCUSSIONS}"
+
+# Output languages line by line to avoid eval issues
+echo "LANG1_LINE='$(echo "$TOP_LANGS" | sed -n '1p')'"
+echo "LANG2_LINE='$(echo "$TOP_LANGS" | sed -n '2p')'"
+echo "LANG3_LINE='$(echo "$TOP_LANGS" | sed -n '3p')'"
