@@ -30,13 +30,27 @@ for repo in $REPOS; do
     "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=1" | \
     jq -r 'length')
 
-  # If we got commits, try to get a better count from contributor stats
-  CONTRIBUTOR_COMMITS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    "${GITHUB_API}/repos/${repo}/stats/contributors" | \
+  # Try to get commit count from contributor stats
+  CONTRIBUTOR_STATS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+    "${GITHUB_API}/repos/${repo}/stats/contributors")
+
+  CONTRIBUTOR_COMMITS=$(echo "$CONTRIBUTOR_STATS" | \
     jq -r --arg user "$USERNAME" '.[] | select(.author.login == $user) | .total // 0' 2>/dev/null)
 
-  if [ -n "$CONTRIBUTOR_COMMITS" ] && [ "$CONTRIBUTOR_COMMITS" != "0" ]; then
+  # Fallback: if contributor stats failed or returned 0, count commits directly
+  if [ -z "$CONTRIBUTOR_COMMITS" ] || [ "$CONTRIBUTOR_COMMITS" = "0" ]; then
+    echo "  Contributor stats unavailable for $repo, counting commits directly..." >&2
+    DIRECT_COUNT=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+      "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=100" | \
+      jq -r 'length' 2>/dev/null)
+
+    if [ -n "$DIRECT_COUNT" ] && [ "$DIRECT_COUNT" != "0" ]; then
+      TOTAL_COMMITS=$((TOTAL_COMMITS + DIRECT_COUNT))
+      echo "    Found $DIRECT_COUNT commits via direct count" >&2
+    fi
+  else
     TOTAL_COMMITS=$((TOTAL_COMMITS + CONTRIBUTOR_COMMITS))
+    echo "  $repo: $CONTRIBUTOR_COMMITS commits" >&2
   fi
 
   # Get commits from current year for yearly stats and daily tracking
