@@ -35,6 +35,13 @@ jobs:
           chmod +x .github/scripts/fetch-github-stats.sh
           source <(.github/scripts/fetch-github-stats.sh)
 
+          # Debug output
+          echo "TOTAL_COMMITS=$TOTAL_COMMITS"
+          echo "YEAR_COMMITS=$YEAR_COMMITS"
+          echo "CURRENT_YEAR=$CURRENT_YEAR"
+          echo "BEST_STREAK=$BEST_STREAK"
+          echo "TOP_LANGS=$TOP_LANGS"
+
           # Parse top 3 languages
           LANG1_NAME=$(echo "$TOP_LANGS" | sed -n '1p' | awk '{print $2}')
           LANG1_PCT=$(echo "$TOP_LANGS" | sed -n '1p' | awk '{print $1}')
@@ -43,10 +50,10 @@ jobs:
           LANG3_NAME=$(echo "$TOP_LANGS" | sed -n '3p' | awk '{print $2}')
           LANG3_PCT=$(echo "$TOP_LANGS" | sed -n '3p' | awk '{print $1}')
 
-          # Calculate bar widths (out of 200px max width)
-          LANG1_WIDTH=$((LANG1_PCT * 2))
-          LANG2_WIDTH=$((LANG2_PCT * 2))
-          LANG3_WIDTH=$((LANG3_PCT * 2))
+          # Calculate bar widths (out of 196px max width)
+          LANG1_WIDTH=$((LANG1_PCT * 196 / 100))
+          LANG2_WIDTH=$((LANG2_PCT * 196 / 100))
+          LANG3_WIDTH=$((LANG3_PCT * 196 / 100))
 
           # Get language colors
           case "$LANG1_NAME" in
