@@ -45,70 +45,81 @@
     <rect x="50" y="415" width="223" height="115" rx="8" fill="#161b22" stroke="#30363d"/>
     <text x="161" y="435" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#f0f6fc">Activity Heatmap</text>
 
-  <!-- Heatmap Grid (12 weeks x 7 days) -->
+  <!-- Heatmap Grid (7 columns for 7 weeks x 7 rows for days of week) -->
   <g id="activity-heatmap">
     <!-- Week 1 -->
-    <rect x="60" y="445" width="10" height="10" rx="2" fill="#0e4429"/><rect x="60" y="458" width="10" height="10" rx="2" fill="#006d32"/><rect x="60" y="471" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="60" y="445" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="60" y="458" width="10" height="10" rx="2" fill="#006d32"/>
+    <rect x="60" y="471" width="10" height="10" rx="2" fill="#0e4429"/>
     <rect x="60" y="484" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="60" y="497" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="60" y="510" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="60" y="523" width="10" height="10" rx="2" fill="#161b22"/>
 
     <!-- Week 2 -->
-    <rect x="73" y="445" width="10" height="10" rx="2" fill="#161b22"/><rect x="73" y="458" width="10" height="10" rx="2" fill="#0e4429"/><rect x="73" y="471" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="73" y="445" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="73" y="458" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="73" y="471" width="10" height="10" rx="2" fill="#161b22"/>
     <rect x="73" y="484" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="73" y="497" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="73" y="510" width="10" height="10" rx="2" fill="#006d32"/>
+    <rect x="73" y="523" width="10" height="10" rx="2" fill="#161b22"/>
 
     <!-- Week 3 -->
-    <rect x="86" y="445" width="10" height="10" rx="2" fill="#0e4429"/><rect x="86" y="458" width="10" height="10" rx="2" fill="#161b22"/><rect x="86" y="471" width="10" height="10" rx="2" fill="#006d32"/>
+    <rect x="86" y="445" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="86" y="458" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="86" y="471" width="10" height="10" rx="2" fill="#006d32"/>
     <rect x="86" y="484" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="86" y="497" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="86" y="510" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="86" y="523" width="10" height="10" rx="2" fill="#39d353"/>
 
     <!-- Week 4 -->
-    <rect x="99" y="445" width="10" height="10" rx="2" fill="#161b22"/><rect x="99" y="458" width="10" height="10" rx="2" fill="#0e4429"/><rect x="99" y="471" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="99" y="445" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="99" y="458" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="99" y="471" width="10" height="10" rx="2" fill="#161b22"/>
     <rect x="99" y="484" width="10" height="10" rx="2" fill="#006d32"/>
+    <rect x="99" y="497" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="99" y="510" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="99" y="523" width="10" height="10" rx="2" fill="#161b22"/>
 
     <!-- Week 5 -->
-    <rect x="112" y="445" width="10" height="10" rx="2" fill="#006d32"/><rect x="112" y="458" width="10" height="10" rx="2" fill="#161b22"/><rect x="112" y="471" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="112" y="445" width="10" height="10" rx="2" fill="#006d32"/>
+    <rect x="112" y="458" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="112" y="471" width="10" height="10" rx="2" fill="#0e4429"/>
     <rect x="112" y="484" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="112" y="497" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="112" y="510" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="112" y="523" width="10" height="10" rx="2" fill="#006d32"/>
 
     <!-- Week 6 -->
-    <rect x="125" y="445" width="10" height="10" rx="2" fill="#161b22"/><rect x="125" y="458" width="10" height="10" rx="2" fill="#0e4429"/><rect x="125" y="471" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="125" y="445" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="125" y="458" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="125" y="471" width="10" height="10" rx="2" fill="#161b22"/>
     <rect x="125" y="484" width="10" height="10" rx="2" fill="#39d353"/>
+    <rect x="125" y="497" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="125" y="510" width="10" height="10" rx="2" fill="#006d32"/>
+    <rect x="125" y="523" width="10" height="10" rx="2" fill="#161b22"/>
 
-    <!-- Week 7 -->
-    <rect x="138" y="445" width="10" height="10" rx="2" fill="#0e4429"/><rect x="138" y="458" width="10" height="10" rx="2" fill="#161b22"/><rect x="138" y="471" width="10" height="10" rx="2" fill="#006d32"/>
+    <!-- Week 7 (current) -->
+    <rect x="138" y="445" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="138" y="458" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="138" y="471" width="10" height="10" rx="2" fill="#006d32"/>
     <rect x="138" y="484" width="10" height="10" rx="2" fill="#161b22"/>
-
-    <!-- Week 8 -->
-    <rect x="151" y="445" width="10" height="10" rx="2" fill="#161b22"/><rect x="151" y="458" width="10" height="10" rx="2" fill="#006d32"/><rect x="151" y="471" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="151" y="484" width="10" height="10" rx="2" fill="#0e4429"/>
-
-    <!-- Week 9 -->
-    <rect x="164" y="445" width="10" height="10" rx="2" fill="#006d32"/><rect x="164" y="458" width="10" height="10" rx="2" fill="#161b22"/><rect x="164" y="471" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="164" y="484" width="10" height="10" rx="2" fill="#161b22"/>
-
-    <!-- Week 10 -->
-    <rect x="177" y="445" width="10" height="10" rx="2" fill="#161b22"/><rect x="177" y="458" width="10" height="10" rx="2" fill="#0e4429"/><rect x="177" y="471" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="177" y="484" width="10" height="10" rx="2" fill="#006d32"/>
-
-    <!-- Week 11 -->
-    <rect x="190" y="445" width="10" height="10" rx="2" fill="#0e4429"/><rect x="190" y="458" width="10" height="10" rx="2" fill="#161b22"/><rect x="190" y="471" width="10" height="10" rx="2" fill="#006d32"/>
-    <rect x="190" y="484" width="10" height="10" rx="2" fill="#161b22"/>
-
-    <!-- Week 12 (current) -->
-    <rect x="203" y="445" width="10" height="10" rx="2" fill="#0e4429"/><rect x="203" y="458" width="10" height="10" rx="2" fill="#161b22"/><rect x="203" y="471" width="10" height="10" rx="2" fill="#39d353"/>
-    <rect x="203" y="484" width="10" height="10" rx="2" fill="#161b22"/>
-
-    <!-- Week 13 -->
-    <rect x="216" y="445" width="10" height="10" rx="2" fill="#161b22"/><rect x="216" y="458" width="10" height="10" rx="2" fill="#26a641"/><rect x="216" y="471" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="216" y="484" width="10" height="10" rx="2" fill="#0e4429"/>
+    <rect x="138" y="497" width="10" height="10" rx="2" fill="#26a641"/>
+    <rect x="138" y="510" width="10" height="10" rx="2" fill="#161b22"/>
+    <rect x="138" y="523" width="10" height="10" rx="2" fill="#0e4429"/>
   </g>
 
-  <!-- Legend inside heatmap box -->
+  <!-- Legend inside heatmap box (centered) -->
   <g id="legend">
-    <text x="60" y="513" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">Less</text>
-    <rect x="85" y="506" width="8" height="8" rx="2" fill="#161b22" stroke="#30363d" stroke-width="0.5"/>
-    <rect x="95" y="506" width="8" height="8" rx="2" fill="#0e4429"/>
-    <rect x="105" y="506" width="8" height="8" rx="2" fill="#006d32"/>
-    <rect x="115" y="506" width="8" height="8" rx="2" fill="#26a641"/>
-    <rect x="125" y="506" width="8" height="8" rx="2" fill="#39d353"/>
-    <text x="137" y="513" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">More</text>
+    <text x="85" y="503" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">Less</text>
+    <rect x="110" y="496" width="8" height="8" rx="2" fill="#161b22" stroke="#30363d" stroke-width="0.5"/>
+    <rect x="120" y="496" width="8" height="8" rx="2" fill="#0e4429"/>
+    <rect x="130" y="496" width="8" height="8" rx="2" fill="#006d32"/>
+    <rect x="140" y="496" width="8" height="8" rx="2" fill="#26a641"/>
+    <rect x="150" y="496" width="8" height="8" rx="2" fill="#39d353"/>
+    <text x="162" y="503" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">More</text>
   </g>
   </g>
 
