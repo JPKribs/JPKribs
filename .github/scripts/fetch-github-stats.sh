@@ -25,7 +25,21 @@ declare -A LANGUAGE_REPOS
 
 echo "Fetching commit data..." >&2
 for repo in $REPOS; do
-  # Get commits from current year
+  # Get total commit count for this repo
+  REPO_TOTAL=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+    "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=1" | \
+    jq -r 'length')
+
+  # If we got commits, try to get a better count from contributor stats
+  CONTRIBUTOR_COMMITS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+    "${GITHUB_API}/repos/${repo}/stats/contributors" | \
+    jq -r --arg user "$USERNAME" '.[] | select(.author.login == $user) | .total // 0' 2>/dev/null)
+
+  if [ -n "$CONTRIBUTOR_COMMITS" ] && [ "$CONTRIBUTOR_COMMITS" != "0" ]; then
+    TOTAL_COMMITS=$((TOTAL_COMMITS + CONTRIBUTOR_COMMITS))
+  fi
+
+  # Get commits from current year for yearly stats and daily tracking
   YEAR_START="${CURRENT_YEAR}-01-01T00:00:00Z"
   YEAR_COMMITS_DATA=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
     "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=100&since=${YEAR_START}" | \
@@ -33,7 +47,17 @@ for repo in $REPOS; do
 
   for commit_date in $YEAR_COMMITS_DATA; do
     YEAR_COMMITS=$((YEAR_COMMITS + 1))
-    TOTAL_COMMITS=$((TOTAL_COMMITS + 1))
+    DAY=$(echo "$commit_date" | cut -d'T' -f1)
+    DAILY_COMMITS[$DAY]=$((${DAILY_COMMITS[$DAY]:-0} + 1))
+  done
+
+  # Also get commits from past 365 days for streak calculation
+  PAST_YEAR=$(date -u -d '365 days ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-365d +%Y-%m-%dT%H:%M:%SZ)
+  PAST_COMMITS_DATA=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+    "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=100&since=${PAST_YEAR}" | \
+    jq -r '.[]? | .commit.author.date' 2>/dev/null)
+
+  for commit_date in $PAST_COMMITS_DATA; do
     DAY=$(echo "$commit_date" | cut -d'T' -f1)
     DAILY_COMMITS[$DAY]=$((${DAILY_COMMITS[$DAY]:-0} + 1))
   done
@@ -49,8 +73,10 @@ done
 
 # Calculate best streak (consecutive days with commits)
 BEST_STREAK=0
+CURRENT_STREAK=0
 TEMP_STREAK=0
 
+# Check last 365 days for streaks
 for i in {0..365}; do
   if command -v gdate >/dev/null 2>&1; then
     DAY=$(gdate -u -d "${i} days ago" +%Y-%m-%d)
@@ -60,9 +86,17 @@ for i in {0..365}; do
 
   if [ "${DAILY_COMMITS[$DAY]:-0}" -gt 0 ]; then
     TEMP_STREAK=$((TEMP_STREAK + 1))
+    # Track current streak (from today backwards)
+    if [ "$i" -eq 0 ] || [ "$CURRENT_STREAK" -gt 0 ]; then
+      CURRENT_STREAK=$TEMP_STREAK
+    fi
   else
     if [ "$TEMP_STREAK" -gt "$BEST_STREAK" ]; then
       BEST_STREAK=$TEMP_STREAK
+    fi
+    # Reset current streak if we hit today with no commits
+    if [ "$i" -eq 0 ]; then
+      CURRENT_STREAK=0
     fi
     TEMP_STREAK=0
   fi
@@ -89,27 +123,29 @@ if [ -z "$TOP_LANGS" ]; then
   TOP_LANGS="0 Unknown"
 fi
 
-# Fetch community stats (discussions)
+# Fetch community stats
 echo "Fetching community stats..." >&2
 TOTAL_POSTS=0
 TOTAL_REPLIES=0
 TOTAL_DISCUSSIONS=0
 
-# Try to get issue/PR comments as proxy for community activity
-COMMENTS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+# Get created issues (posts)
+ISSUES_CREATED=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
   "${GITHUB_API}/search/issues?q=author:${USERNAME}+type:issue" | \
   jq -r '.total_count // 0' 2>/dev/null)
-TOTAL_POSTS=${COMMENTS:-0}
+TOTAL_POSTS=${ISSUES_CREATED:-0}
 
-PR_COMMENTS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-  "${GITHUB_API}/search/issues?q=commenter:${USERNAME}+type:pr" | \
+# Get issue comments (replies)
+ISSUE_COMMENTS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  "${GITHUB_API}/search/issues?q=commenter:${USERNAME}+-author:${USERNAME}" | \
   jq -r '.total_count // 0' 2>/dev/null)
-TOTAL_REPLIES=${PR_COMMENTS:-0}
+TOTAL_REPLIES=${ISSUE_COMMENTS:-0}
 
-DISCUSSIONS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-  "${GITHUB_API}/search/issues?q=author:${USERNAME}+is:issue" | \
+# Get PR count (discussions)
+PRS_CREATED=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  "${GITHUB_API}/search/issues?q=author:${USERNAME}+type:pr" | \
   jq -r '.total_count // 0' 2>/dev/null)
-TOTAL_DISCUSSIONS=${DISCUSSIONS:-0}
+TOTAL_DISCUSSIONS=${PRS_CREATED:-0}
 
 # Output data for use in workflow (without export, just echo)
 echo "TOTAL_COMMITS=${TOTAL_COMMITS}"
