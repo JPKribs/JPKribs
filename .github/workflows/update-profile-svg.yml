@@ -128,7 +128,7 @@ jobs:
 
             <!-- Heatmap Grid (7 columns for 7 weeks x 7 rows for days of week) -->
             <g id="activity-heatmap">
-HEATMAP_PLACEHOLDER
+              HEATMAP_PLACEHOLDER
             </g>
 
             <!-- Legend inside heatmap box (centered) -->
