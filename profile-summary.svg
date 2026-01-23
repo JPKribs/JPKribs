@@ -1,5 +1,10 @@
+<<<<<<< Updated upstream
 <svg width="800" height="420" viewBox="0 0 800 420" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="800" height="420" rx="12" fill="#0d1117" stroke="#30363d"/>
+=======
+<svg width="800" height="550" viewBox="0 0 800 550" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="550" rx="12" fill="#0d1117" stroke="#30363d"/>
+>>>>>>> Stashed changes
   
   <text x="400" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#f0f6fc">Joe Kribs</text>
   <text x="400" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#f0f6fc">Data Analytics Manager</text>
@@ -35,7 +40,118 @@
   </g>
   <text x="640" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#8b949e">⭐ 7 Stars</text>
 
+<<<<<<< Updated upstream
   <line x1="50" y1="385" x2="750" y2="385" stroke="#30363d" />
   <text x="50" y="405" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">🌐 joseph.kribs.net  •  ✉️ joseph@kribs.net</text>
   <text x="750" y="405" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">📍 Littleton, CO • Jan 23, 2026</text>
+=======
+  <line x1="50" y1="370" x2="750" y2="370" stroke="#30363d" />
+
+  <!-- Activity Graph -->
+  <text x="50" y="390" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#f0f6fc">Recent Activity</text>
+
+  <!-- Heatmap Grid (12 weeks x 7 days) -->
+  <g id="activity-heatmap">
+    <!-- Week 1 -->
+    <rect x="50" y="405" width="8" height="8" rx="2" fill="#0e4429"/><rect x="50" y="415" width="8" height="8" rx="2" fill="#006d32"/><rect x="50" y="425" width="8" height="8" rx="2" fill="#0e4429"/>
+    <rect x="50" y="435" width="8" height="8" rx="2" fill="#161b22"/><rect x="50" y="445" width="8" height="8" rx="2" fill="#0e4429"/><rect x="50" y="455" width="8" height="8" rx="2" fill="#161b22"/><rect x="50" y="465" width="8" height="8" rx="2" fill="#161b22"/>
+
+    <!-- Week 2 -->
+    <rect x="60" y="405" width="8" height="8" rx="2" fill="#161b22"/><rect x="60" y="415" width="8" height="8" rx="2" fill="#0e4429"/><rect x="60" y="425" width="8" height="8" rx="2" fill="#161b22"/>
+    <rect x="60" y="435" width="8" height="8" rx="2" fill="#0e4429"/><rect x="60" y="445" width="8" height="8" rx="2" fill="#161b22"/><rect x="60" y="455" width="8" height="8" rx="2" fill="#006d32"/><rect x="60" y="465" width="8" height="8" rx="2" fill="#161b22"/>
+
+    <!-- Week 3 -->
+    <rect x="70" y="405" width="8" height="8" rx="2" fill="#0e4429"/><rect x="70" y="415" width="8" height="8" rx="2" fill="#161b22"/><rect x="70" y="425" width="8" height="8" rx="2" fill="#006d32"/>
+    <rect x="70" y="435" width="8" height="8" rx="2" fill="#161b22"/><rect x="70" y="445" width="8" height="8" rx="2" fill="#0e4429"/><rect x="70" y="455" width="8" height="8" rx="2" fill="#161b22"/><rect x="70" y="465" width="8" height="8" rx="2" fill="#39d353"/>
+
+    <!-- Week 4 -->
+    <rect x="80" y="405" width="8" height="8" rx="2" fill="#161b22"/><rect x="80" y="415" width="8" height="8" rx="2" fill="#0e4429"/><rect x="80" y="425" width="8" height="8" rx="2" fill="#161b22"/>
+    <rect x="80" y="435" width="8" height="8" rx="2" fill="#006d32"/><rect x="80" y="445" width="8" height="8" rx="2" fill="#161b22"/><rect x="80" y="455" width="8" height="8" rx="2" fill="#0e4429"/><rect x="80" y="465" width="8" height="8" rx="2" fill="#161b22"/>
+
+    <!-- Week 5 -->
+    <rect x="90" y="405" width="8" height="8" rx="2" fill="#006d32"/><rect x="90" y="415" width="8" height="8" rx="2" fill="#161b22"/><rect x="90" y="425" width="8" height="8" rx="2" fill="#0e4429"/>
+    <rect x="90" y="435" width="8" height="8" rx="2" fill="#161b22"/><rect x="90" y="445" width="8" height="8" rx="2" fill="#0e4429"/><rect x="90" y="455" width="8" height="8" rx="2" fill="#161b22"/><rect x="90" y="465" width="8" height="8" rx="2" fill="#006d32"/>
+
+    <!-- Week 6 -->
+    <rect x="100" y="405" width="8" height="8" rx="2" fill="#161b22"/><rect x="100" y="415" width="8" height="8" rx="2" fill="#0e4429"/><rect x="100" y="425" width="8" height="8" rx="2" fill="#161b22"/>
+    <rect x="100" y="435" width="8" height="8" rx="2" fill="#39d353"/><rect x="100" y="445" width="8" height="8" rx="2" fill="#161b22"/><rect x="100" y="455" width="8" height="8" rx="2" fill="#006d32"/><rect x="100" y="465" width="8" height="8" rx="2" fill="#161b22"/>
+
+    <!-- Week 7 -->
+    <rect x="110" y="405" width="8" height="8" rx="2" fill="#0e4429"/><rect x="110" y="415" width="8" height="8" rx="2" fill="#161b22"/><rect x="110" y="425" width="8" height="8" rx="2" fill="#006d32"/>
+    <rect x="110" y="435" width="8" height="8" rx="2" fill="#161b22"/><rect x="110" y="445" width="8" height="8" rx="2" fill="#0e4429"/><rect x="110" y="455" width="8" height="8" rx="2" fill="#161b22"/><rect x="110" y="465" width="8" height="8" rx="2" fill="#0e4429"/>
+
+    <!-- Week 8 -->
+    <rect x="120" y="405" width="8" height="8" rx="2" fill="#161b22"/><rect x="120" y="415" width="8" height="8" rx="2" fill="#006d32"/><rect x="120" y="425" width="8" height="8" rx="2" fill="#161b22"/>
+    <rect x="120" y="435" width="8" height="8" rx="2" fill="#0e4429"/><rect x="120" y="445" width="8" height="8" rx="2" fill="#161b22"/><rect x="120" y="455" width="8" height="8" rx="2" fill="#0e4429"/><rect x="120" y="465" width="8" height="8" rx="2" fill="#161b22"/>
+
+    <!-- Week 9 -->
+    <rect x="130" y="405" width="8" height="8" rx="2" fill="#006d32"/><rect x="130" y="415" width="8" height="8" rx="2" fill="#161b22"/><rect x="130" y="425" width="8" height="8" rx="2" fill="#0e4429"/>
+    <rect x="130" y="435" width="8" height="8" rx="2" fill="#161b22"/><rect x="130" y="445" width="8" height="8" rx="2" fill="#39d353"/><rect x="130" y="455" width="8" height="8" rx="2" fill="#161b22"/><rect x="130" y="465" width="8" height="8" rx="2" fill="#006d32"/>
+
+    <!-- Week 10 -->
+    <rect x="140" y="405" width="8" height="8" rx="2" fill="#161b22"/><rect x="140" y="415" width="8" height="8" rx="2" fill="#0e4429"/><rect x="140" y="425" width="8" height="8" rx="2" fill="#161b22"/>
+    <rect x="140" y="435" width="8" height="8" rx="2" fill="#006d32"/><rect x="140" y="445" width="8" height="8" rx="2" fill="#161b22"/><rect x="140" y="455" width="8" height="8" rx="2" fill="#0e4429"/><rect x="140" y="465" width="8" height="8" rx="2" fill="#161b22"/>
+
+    <!-- Week 11 -->
+    <rect x="150" y="405" width="8" height="8" rx="2" fill="#0e4429"/><rect x="150" y="415" width="8" height="8" rx="2" fill="#161b22"/><rect x="150" y="425" width="8" height="8" rx="2" fill="#006d32"/>
+    <rect x="150" y="435" width="8" height="8" rx="2" fill="#161b22"/><rect x="150" y="445" width="8" height="8" rx="2" fill="#0e4429"/><rect x="150" y="455" width="8" height="8" rx="2" fill="#161b22"/><rect x="150" y="465" width="8" height="8" rx="2" fill="#39d353"/>
+
+    <!-- Week 12 (current) -->
+    <rect x="160" y="405" width="8" height="8" rx="2" fill="#161b22"/><rect x="160" y="415" width="8" height="8" rx="2" fill="#26a641"/><rect x="160" y="425" width="8" height="8" rx="2" fill="#161b22"/>
+    <rect x="160" y="435" width="8" height="8" rx="2" fill="#0e4429"/><rect x="160" y="445" width="8" height="8" rx="2" fill="#161b22"/><rect x="160" y="455" width="8" height="8" rx="2" fill="#006d32"/><rect x="160" y="465" width="8" height="8" rx="2" fill="#161b22"/>
+  </g>
+
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="185" y="405" width="85" height="98" rx="8" fill="#161b22" stroke="#30363d"/>
+    <text x="227" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#f0f6fc">Level</text>
+    <text x="200" y="447" font-family="Arial, sans-serif" font-size="8" fill="#8b949e">Less</text>
+    <rect x="200" y="455" width="8" height="8" rx="2" fill="#161b22" stroke="#30363d" stroke-width="0.5"/>
+    <rect x="210" y="455" width="8" height="8" rx="2" fill="#0e4429"/>
+    <rect x="220" y="455" width="8" height="8" rx="2" fill="#006d32"/>
+    <rect x="230" y="455" width="8" height="8" rx="2" fill="#26a641"/>
+    <rect x="240" y="455" width="8" height="8" rx="2" fill="#39d353"/>
+    <text x="200" y="480" font-family="Arial, sans-serif" font-size="8" fill="#8b949e">More</text>
+  </g>
+
+  <!-- Stats Cards Row -->
+  <g id="commit-stats">
+    <rect x="285" y="405" width="205" height="98" rx="8" fill="#161b22" stroke="#30363d"/>
+    <text x="387" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#f0f6fc">Contribution Stats</text>
+    <text x="300" y="450" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Total commits:</text>
+    <text x="475" y="450" text-anchor="end" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#39d353">142</text>
+    <text x="300" y="470" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Current streak:</text>
+    <text x="475" y="470" text-anchor="end" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#26a641">3 days</text>
+    <text x="300" y="490" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Best streak:</text>
+    <text x="475" y="490" text-anchor="end" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#f85149">12 days</text>
+  </g>
+
+  <!-- Tech Stack Bars -->
+  <g id="tech-stack">
+    <rect x="505" y="405" width="245" height="98" rx="8" fill="#161b22" stroke="#30363d"/>
+    <text x="627" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#f0f6fc">Top Languages</text>
+
+    <!-- Swift bar -->
+    <rect x="520" y="445" width="215" height="5" rx="2" fill="#21262d"/>
+    <rect x="520" y="445" width="172" height="5" rx="2" fill="#F05138"/>
+    <text x="520" y="441" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">Swift</text>
+    <text x="730" y="441" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">80%</text>
+
+    <!-- Go bar -->
+    <rect x="520" y="465" width="215" height="5" rx="2" fill="#21262d"/>
+    <rect x="520" y="465" width="32" height="5" rx="2" fill="#00ADD8"/>
+    <text x="520" y="461" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">Go</text>
+    <text x="730" y="461" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">15%</text>
+
+    <!-- C# bar -->
+    <rect x="520" y="485" width="215" height="5" rx="2" fill="#21262d"/>
+    <rect x="520" y="485" width="11" height="5" rx="2" fill="#512BD4"/>
+    <text x="520" y="481" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">C#</text>
+    <text x="730" y="481" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">5%</text>
+  </g>
+
+  <line x1="50" y1="520" x2="750" y2="520" stroke="#30363d" />
+  <text x="50" y="538" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">🌐 joseph.kribs.net  •  ✉️ joseph@kribs.net</text>
+  <text x="750" y="538" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">📍 Littleton, CO • Jan 22, 2026</text>
+>>>>>>> Stashed changes
 </svg>
