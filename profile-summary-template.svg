@@ -37,9 +37,6 @@
 
   <line x1="50" y1="370" x2="750" y2="370" stroke="#30363d" />
 
-  <!-- Activity Section -->
-  <text x="50" y="395" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#f0f6fc">Recent Activity</text>
-
   <!-- Contributions Box (Left) -->
   <g id="contributions">
     <rect x="50" y="415" width="220" height="115" rx="8" fill="#161b22" stroke="#30363d"/>
