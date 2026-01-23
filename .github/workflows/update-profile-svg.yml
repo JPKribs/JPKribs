@@ -77,7 +77,8 @@ jobs:
             *) LANG3_COLOR="#8B949E" ;;
           esac
 
-          cat <<EOF > profile-summary.svg
+          # Generate SVG file
+          cat > profile-summary.svg <<'SVGEOF'
           <svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="800" height="600" rx="12" fill="#0d1117" stroke="#30363d"/>
             
@@ -182,7 +183,32 @@ $HEATMAP_SVG
             <text x="50" y="578" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">🌐 joseph.kribs.net  •  ✉️ joseph@kribs.net</text>
             <text x="750" y="578" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">📍 Littleton, CO • $UPDATED</text>
           </svg>
-          EOF
+SVGEOF
+
+          # Substitute variables
+          sed -i '' "s|\$SWIFT_STARS_FORMATTED|$SWIFT_STARS_FORMATTED|g" profile-summary.svg
+          sed -i '' "s|\$PROXY_STARS|$PROXY_STARS|g" profile-summary.svg
+          sed -i '' "s|\$POSTER_STARS|$POSTER_STARS|g" profile-summary.svg
+          sed -i '' "s|\$UPDATED|$UPDATED|g" profile-summary.svg
+          sed -i '' "s|\$TOTAL_COMMITS|$TOTAL_COMMITS|g" profile-summary.svg
+          sed -i '' "s|\$CURRENT_STREAK|$CURRENT_STREAK|g" profile-summary.svg
+          sed -i '' "s|\$BEST_STREAK|$BEST_STREAK|g" profile-summary.svg
+          sed -i '' "s|\$LANG1_NAME|$LANG1_NAME|g" profile-summary.svg
+          sed -i '' "s|\$LANG1_PCT|$LANG1_PCT|g" profile-summary.svg
+          sed -i '' "s|\$LANG1_WIDTH|$LANG1_WIDTH|g" profile-summary.svg
+          sed -i '' "s|\$LANG1_COLOR|$LANG1_COLOR|g" profile-summary.svg
+          sed -i '' "s|\$LANG2_NAME|$LANG2_NAME|g" profile-summary.svg
+          sed -i '' "s|\$LANG2_PCT|$LANG2_PCT|g" profile-summary.svg
+          sed -i '' "s|\$LANG2_WIDTH|$LANG2_WIDTH|g" profile-summary.svg
+          sed -i '' "s|\$LANG2_COLOR|$LANG2_COLOR|g" profile-summary.svg
+          sed -i '' "s|\$LANG3_NAME|$LANG3_NAME|g" profile-summary.svg
+          sed -i '' "s|\$LANG3_PCT|$LANG3_PCT|g" profile-summary.svg
+          sed -i '' "s|\$LANG3_WIDTH|$LANG3_WIDTH|g" profile-summary.svg
+          sed -i '' "s|\$LANG3_COLOR|$LANG3_COLOR|g" profile-summary.svg
+
+          # Insert heatmap SVG
+          HEATMAP_ESCAPED=$(echo "$HEATMAP_SVG" | sed 's/[&/\]/\\&/g')
+          sed -i '' "s|\$HEATMAP_SVG|$HEATMAP_ESCAPED|g" profile-summary.svg
 
       - name: Commit and Push
         run: |
