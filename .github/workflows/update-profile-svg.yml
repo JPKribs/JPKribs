@@ -163,19 +163,19 @@ $HEATMAP_SVG
               <rect x="538" y="465" width="200" height="6" rx="2" fill="#21262d"/>
               <rect x="538" y="465" width="$LANG1_WIDTH" height="6" rx="2" fill="$LANG1_COLOR"/>
               <text x="538" y="460" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">$LANG1_NAME</text>
-              <text x="735" y="460" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">${LANG1_PCT}%</text>
+              <text x="735" y="460" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">$LANG1_PCT%</text>
 
               <!-- Language 2 bar -->
               <rect x="538" y="490" width="200" height="6" rx="2" fill="#21262d"/>
               <rect x="538" y="490" width="$LANG2_WIDTH" height="6" rx="2" fill="$LANG2_COLOR"/>
               <text x="538" y="485" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">$LANG2_NAME</text>
-              <text x="735" y="485" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">${LANG2_PCT}%</text>
+              <text x="735" y="485" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">$LANG2_PCT%</text>
 
               <!-- Language 3 bar -->
               <rect x="538" y="515" width="200" height="6" rx="2" fill="#21262d"/>
               <rect x="538" y="515" width="$LANG3_WIDTH" height="6" rx="2" fill="$LANG3_COLOR"/>
               <text x="538" y="510" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">$LANG3_NAME</text>
-              <text x="735" y="510" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">${LANG3_PCT}%</text>
+              <text x="735" y="510" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">$LANG3_PCT%</text>
             </g>
 
             <line x1="50" y1="555" x2="750" y2="555" stroke="#30363d" />
