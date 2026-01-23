@@ -16,6 +16,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch Real-Time Stats
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Fetch star counts
           SWIFT_STARS=$(curl -s https://api.github.com/repos/jellyfin/Swiftfin | jq -r '.stargazers_count')
