@@ -33,7 +33,7 @@ jobs:
 
           # Fetch real GitHub activity data
           chmod +x .github/scripts/fetch-github-stats.sh
-          eval "$(.github/scripts/fetch-github-stats.sh)"
+          source <(.github/scripts/fetch-github-stats.sh)
 
           # Parse top 3 languages
           LANG1_NAME=$(echo "$TOP_LANGS" | sed -n '1p' | awk '{print $2}')
