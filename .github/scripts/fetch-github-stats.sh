@@ -1,26 +1,10 @@
 #!/bin/bash
 
 # Fetch real GitHub activity statistics
-# This script pulls actual data from GitHub API and generates SVG heatmap data
 
 USERNAME="JPKribs"
 GITHUB_API="https://api.github.com"
-
-# Color mapping for contribution levels
-get_color() {
-  local count=$1
-  if [ "$count" -eq 0 ]; then
-    echo "#161b22"
-  elif [ "$count" -le 3 ]; then
-    echo "#0e4429"
-  elif [ "$count" -le 6 ]; then
-    echo "#006d32"
-  elif [ "$count" -le 9 ]; then
-    echo "#26a641"
-  else
-    echo "#39d353"
-  fi
-}
+CURRENT_YEAR=$(date +%Y)
 
 # Fetch all user repos
 echo "Fetching repositories..." >&2
@@ -28,58 +12,54 @@ REPOS=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
   "${GITHUB_API}/users/${USERNAME}/repos?per_page=100&type=all" | \
   jq -r '.[].full_name')
 
-# Calculate total commits across all repos
+# Calculate total commits and yearly commits
 TOTAL_COMMITS=0
+YEAR_COMMITS=0
 declare -A DAILY_COMMITS
-declare -A LANGUAGE_BYTES
+declare -A LANGUAGE_REPOS
 
 echo "Fetching commit data..." >&2
 for repo in $REPOS; do
-  # Get commits from last 50 days
-  COMMITS=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
-    "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=100&since=$(date -u -v-50d +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '50 days ago' +%Y-%m-%dT%H:%M:%SZ)" | \
+  # Get all commits by user (for total)
+  ALL_COMMITS=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+    "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=100" | \
+    jq -r 'length')
+  TOTAL_COMMITS=$((TOTAL_COMMITS + ALL_COMMITS))
+
+  # Get commits from current year
+  YEAR_START="${CURRENT_YEAR}-01-01T00:00:00Z"
+  YEAR_COMMITS_DATA=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+    "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=100&since=${YEAR_START}" | \
     jq -r '.[] | .commit.author.date')
 
-  for commit_date in $COMMITS; do
+  for commit_date in $YEAR_COMMITS_DATA; do
+    YEAR_COMMITS=$((YEAR_COMMITS + 1))
     DAY=$(echo "$commit_date" | cut -d'T' -f1)
     DAILY_COMMITS[$DAY]=$((${DAILY_COMMITS[$DAY]:-0} + 1))
-    TOTAL_COMMITS=$((TOTAL_COMMITS + 1))
   done
 
-  # Get language statistics
-  LANGS=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
-    "${GITHUB_API}/repos/${repo}/languages")
+  # Get primary language for this repo
+  PRIMARY_LANG=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+    "${GITHUB_API}/repos/${repo}" | jq -r '.language')
 
-  while IFS=":" read -r lang bytes; do
-    lang=$(echo "$lang" | tr -d '"' | xargs)
-    bytes=$(echo "$bytes" | tr -d ',' | xargs)
-    if [ -n "$lang" ] && [ -n "$bytes" ]; then
-      LANGUAGE_BYTES[$lang]=$((${LANGUAGE_BYTES[$lang]:-0} + bytes))
-    fi
-  done < <(echo "$LANGS" | jq -r 'to_entries | .[] | "\(.key):\(.value)"')
+  if [ -n "$PRIMARY_LANG" ] && [ "$PRIMARY_LANG" != "null" ]; then
+    LANGUAGE_REPOS[$PRIMARY_LANG]=$((${LANGUAGE_REPOS[$PRIMARY_LANG]:-0} + 1))
+  fi
 done
 
-# Calculate current and best streak
-CURRENT_STREAK=0
+# Calculate best streak (consecutive days with commits)
 BEST_STREAK=0
 TEMP_STREAK=0
-YESTERDAY=$(date -u -v-1d +%Y-%m-%d 2>/dev/null || date -u -d '1 day ago' +%Y-%m-%d)
 
-for i in {0..49}; do
+for i in {0..365}; do
   DAY=$(date -u -v-${i}d +%Y-%m-%d 2>/dev/null || date -u -d "${i} days ago" +%Y-%m-%d)
   if [ "${DAILY_COMMITS[$DAY]:-0}" -gt 0 ]; then
     TEMP_STREAK=$((TEMP_STREAK + 1))
-    if [ "$i" -eq 0 ] || [ "$CURRENT_STREAK" -gt 0 ]; then
-      CURRENT_STREAK=$((CURRENT_STREAK + 1))
-    fi
   else
     if [ "$TEMP_STREAK" -gt "$BEST_STREAK" ]; then
       BEST_STREAK=$TEMP_STREAK
     fi
     TEMP_STREAK=0
-    if [ "$i" -le 1 ]; then
-      CURRENT_STREAK=0
-    fi
   fi
 done
 
@@ -87,52 +67,46 @@ if [ "$TEMP_STREAK" -gt "$BEST_STREAK" ]; then
   BEST_STREAK=$TEMP_STREAK
 fi
 
-# Calculate language percentages
-TOTAL_BYTES=0
-for bytes in "${LANGUAGE_BYTES[@]}"; do
-  TOTAL_BYTES=$((TOTAL_BYTES + bytes))
-done
-
-declare -A LANGUAGE_PCT
-for lang in "${!LANGUAGE_BYTES[@]}"; do
-  PCT=$((${LANGUAGE_BYTES[$lang]} * 100 / TOTAL_BYTES))
-  LANGUAGE_PCT[$lang]=$PCT
-done
-
-# Get top 3 languages
-TOP_LANGS=$(for lang in "${!LANGUAGE_PCT[@]}"; do
-  echo "${LANGUAGE_PCT[$lang]} $lang"
+# Get top 3 languages by repo count
+TOP_LANGS=$(for lang in "${!LANGUAGE_REPOS[@]}"; do
+  count=${LANGUAGE_REPOS[$lang]}
+  total_repos=$(echo "$REPOS" | wc -l)
+  pct=$((count * 100 / total_repos))
+  echo "$pct $lang"
 done | sort -rn | head -3)
 
-# Generate heatmap SVG for last 49 days (7 weeks x 7 days)
-HEATMAP_SVG=""
-X_START=60
-Y_START=445
-CELL_SIZE=10
-CELL_GAP=13
+# Fetch community stats (discussions)
+echo "Fetching community stats..." >&2
+# Note: This requires GraphQL API for discussions
+# For now, we'll use placeholder values
+TOTAL_POSTS=0
+TOTAL_REPLIES=0
+TOTAL_DISCUSSIONS=0
 
-for week in {0..6}; do
-  X_POS=$((X_START + week * CELL_GAP))
+# Try to get issue/PR comments as proxy for community activity
+COMMENTS=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+  "${GITHUB_API}/search/issues?q=author:${USERNAME}+type:issue" | \
+  jq -r '.total_count')
+TOTAL_POSTS=${COMMENTS:-0}
 
-  for day in {0..6}; do
-    DAY_INDEX=$((week * 7 + day))
-    DATE=$(date -u -v-$((48 - DAY_INDEX))d +%Y-%m-%d 2>/dev/null || date -u -d "$((48 - DAY_INDEX)) days ago" +%Y-%m-%d)
-    COMMITS=${DAILY_COMMITS[$DATE]:-0}
-    COLOR=$(get_color $COMMITS)
-    Y_POS=$((Y_START + day * CELL_GAP))
+PR_COMMENTS=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+  "${GITHUB_API}/search/issues?q=commenter:${USERNAME}+type:pr" | \
+  jq -r '.total_count')
+TOTAL_REPLIES=${PR_COMMENTS:-0}
 
-    HEATMAP_SVG="${HEATMAP_SVG}              <rect x=\"${X_POS}\" y=\"${Y_POS}\" width=\"${CELL_SIZE}\" height=\"${CELL_SIZE}\" rx=\"2\" fill=\"${COLOR}\"/>\n"
-  done
-  HEATMAP_SVG="${HEATMAP_SVG}\n"
-done
+DISCUSSIONS=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+  "${GITHUB_API}/search/issues?q=author:${USERNAME}+is:issue" | \
+  jq -r '.total_count')
+TOTAL_DISCUSSIONS=${DISCUSSIONS:-0}
 
 # Export data for use in workflow
 echo "TOTAL_COMMITS=${TOTAL_COMMITS}"
-echo "CURRENT_STREAK=${CURRENT_STREAK}"
+echo "YEAR_COMMITS=${YEAR_COMMITS}"
+echo "CURRENT_YEAR=${CURRENT_YEAR}"
 echo "BEST_STREAK=${BEST_STREAK}"
+echo "TOTAL_POSTS=${TOTAL_POSTS}"
+echo "TOTAL_REPLIES=${TOTAL_REPLIES}"
+echo "TOTAL_DISCUSSIONS=${TOTAL_DISCUSSIONS}"
 echo "TOP_LANGS<<EOF"
 echo "$TOP_LANGS"
-echo "EOF"
-echo "HEATMAP_SVG<<EOF"
-echo -e "$HEATMAP_SVG"
 echo "EOF"
