@@ -1,6 +1,6 @@
 <svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="800" height="600" rx="12" fill="#0d1117" stroke="#30363d"/>
-  
+
   <text x="400" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#f0f6fc">Joe Kribs</text>
   <text x="400" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#f0f6fc">Data Analytics Manager</text>
   <text x="400" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#8b949e">Jellyfin Team Member • Swiftfin Co-Maintainer</text>
@@ -37,126 +37,55 @@
 
   <line x1="50" y1="370" x2="750" y2="370" stroke="#30363d" />
 
-  <!-- Activity Graph -->
+  <!-- Activity Section -->
   <text x="50" y="395" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#f0f6fc">Recent Activity</text>
 
-  <!-- Heatmap with Legend in Box -->
-  <g id="heatmap-container">
+  <!-- Contributions Box (Left) -->
+  <g id="contributions">
     <rect x="50" y="415" width="223" height="115" rx="8" fill="#161b22" stroke="#30363d"/>
-    <text x="161" y="435" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#f0f6fc">Activity Heatmap</text>
-
-  <!-- Heatmap Grid (7 columns for 7 weeks x 7 rows for days of week) -->
-  <g id="activity-heatmap">
-    <!-- Week 1 -->
-    <rect x="60" y="445" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="60" y="458" width="10" height="10" rx="2" fill="#006d32"/>
-    <rect x="60" y="471" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="60" y="484" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="60" y="497" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="60" y="510" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="60" y="523" width="10" height="10" rx="2" fill="#161b22"/>
-
-    <!-- Week 2 -->
-    <rect x="73" y="445" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="73" y="458" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="73" y="471" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="73" y="484" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="73" y="497" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="73" y="510" width="10" height="10" rx="2" fill="#006d32"/>
-    <rect x="73" y="523" width="10" height="10" rx="2" fill="#161b22"/>
-
-    <!-- Week 3 -->
-    <rect x="86" y="445" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="86" y="458" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="86" y="471" width="10" height="10" rx="2" fill="#006d32"/>
-    <rect x="86" y="484" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="86" y="497" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="86" y="510" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="86" y="523" width="10" height="10" rx="2" fill="#39d353"/>
-
-    <!-- Week 4 -->
-    <rect x="99" y="445" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="99" y="458" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="99" y="471" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="99" y="484" width="10" height="10" rx="2" fill="#006d32"/>
-    <rect x="99" y="497" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="99" y="510" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="99" y="523" width="10" height="10" rx="2" fill="#161b22"/>
-
-    <!-- Week 5 -->
-    <rect x="112" y="445" width="10" height="10" rx="2" fill="#006d32"/>
-    <rect x="112" y="458" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="112" y="471" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="112" y="484" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="112" y="497" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="112" y="510" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="112" y="523" width="10" height="10" rx="2" fill="#006d32"/>
-
-    <!-- Week 6 -->
-    <rect x="125" y="445" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="125" y="458" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="125" y="471" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="125" y="484" width="10" height="10" rx="2" fill="#39d353"/>
-    <rect x="125" y="497" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="125" y="510" width="10" height="10" rx="2" fill="#006d32"/>
-    <rect x="125" y="523" width="10" height="10" rx="2" fill="#161b22"/>
-
-    <!-- Week 7 (current) -->
-    <rect x="138" y="445" width="10" height="10" rx="2" fill="#0e4429"/>
-    <rect x="138" y="458" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="138" y="471" width="10" height="10" rx="2" fill="#006d32"/>
-    <rect x="138" y="484" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="138" y="497" width="10" height="10" rx="2" fill="#26a641"/>
-    <rect x="138" y="510" width="10" height="10" rx="2" fill="#161b22"/>
-    <rect x="138" y="523" width="10" height="10" rx="2" fill="#0e4429"/>
+    <text x="161" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f0f6fc">Contributions</text>
+    <text x="62" y="465" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Best streak:</text>
+    <text x="261" y="465" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#f85149"> days</text>
+    <text x="62" y="488" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Commits in :</text>
+    <text x="261" y="488" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#26a641"></text>
+    <text x="62" y="511" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total commits:</text>
+    <text x="261" y="511" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#39d353"></text>
   </g>
 
-  <!-- Legend inside heatmap box (centered) -->
-  <g id="legend">
-    <text x="85" y="503" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">Less</text>
-    <rect x="110" y="496" width="8" height="8" rx="2" fill="#161b22" stroke="#30363d" stroke-width="0.5"/>
-    <rect x="120" y="496" width="8" height="8" rx="2" fill="#0e4429"/>
-    <rect x="130" y="496" width="8" height="8" rx="2" fill="#006d32"/>
-    <rect x="140" y="496" width="8" height="8" rx="2" fill="#26a641"/>
-    <rect x="150" y="496" width="8" height="8" rx="2" fill="#39d353"/>
-    <text x="162" y="503" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">More</text>
-  </g>
-  </g>
-
-  <!-- Stats Cards Row -->
-  <g id="commit-stats">
+  <!-- Languages Box (Center) -->
+  <g id="languages">
     <rect x="288" y="415" width="223" height="115" rx="8" fill="#161b22" stroke="#30363d"/>
-    <text x="399" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f0f6fc">Contribution Stats</text>
-    <text x="300" y="465" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total commits:</text>
-    <text x="498" y="465" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#39d353">142</text>
-    <text x="300" y="488" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Current streak:</text>
-    <text x="498" y="488" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#26a641">3 days</text>
-    <text x="300" y="511" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Best streak:</text>
-    <text x="498" y="511" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#f85149">12 days</text>
+    <text x="399" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f0f6fc">Languages</text>
+
+    <!-- Language 1 bar -->
+    <rect x="300" y="465" width="200" height="6" rx="2" fill="#21262d"/>
+    <rect x="300" y="465" width="0" height="6" rx="2" fill="#8B949E"/>
+    <text x="300" y="460" font-family="Arial, sans-serif" font-size="10" fill="#8b949e"></text>
+    <text x="497" y="460" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">%</text>
+
+    <!-- Language 2 bar -->
+    <rect x="300" y="490" width="200" height="6" rx="2" fill="#21262d"/>
+    <rect x="300" y="490" width="0" height="6" rx="2" fill="#8B949E"/>
+    <text x="300" y="485" font-family="Arial, sans-serif" font-size="10" fill="#8b949e"></text>
+    <text x="497" y="485" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">%</text>
+
+    <!-- Language 3 bar -->
+    <rect x="300" y="515" width="200" height="6" rx="2" fill="#21262d"/>
+    <rect x="300" y="515" width="0" height="6" rx="2" fill="#8B949E"/>
+    <text x="300" y="510" font-family="Arial, sans-serif" font-size="10" fill="#8b949e"></text>
+    <text x="497" y="510" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">%</text>
   </g>
 
-  <!-- Tech Stack Bars -->
-  <g id="tech-stack">
+  <!-- Community Box (Right) -->
+  <g id="community">
     <rect x="526" y="415" width="223" height="115" rx="8" fill="#161b22" stroke="#30363d"/>
-    <text x="637" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f0f6fc">Top Languages</text>
-
-    <!-- Swift bar -->
-    <rect x="538" y="465" width="200" height="6" rx="2" fill="#21262d"/>
-    <rect x="538" y="465" width="160" height="6" rx="2" fill="#F05138"/>
-    <text x="538" y="460" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Swift</text>
-    <text x="735" y="460" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">80%</text>
-
-    <!-- Go bar -->
-    <rect x="538" y="490" width="200" height="6" rx="2" fill="#21262d"/>
-    <rect x="538" y="490" width="30" height="6" rx="2" fill="#00ADD8"/>
-    <text x="538" y="485" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Go</text>
-    <text x="735" y="485" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">15%</text>
-
-    <!-- C# bar -->
-    <rect x="538" y="515" width="200" height="6" rx="2" fill="#21262d"/>
-    <rect x="538" y="515" width="10" height="6" rx="2" fill="#512BD4"/>
-    <text x="538" y="510" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">C#</text>
-    <text x="735" y="510" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">5%</text>
+    <text x="637" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f0f6fc">Community</text>
+    <text x="538" y="465" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total posts:</text>
+    <text x="737" y="465" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff"></text>
+    <text x="538" y="488" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total replies:</text>
+    <text x="737" y="488" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff"></text>
+    <text x="538" y="511" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total discussions:</text>
+    <text x="737" y="511" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff"></text>
   </g>
 
   <line x1="50" y1="555" x2="750" y2="555" stroke="#30363d" />
