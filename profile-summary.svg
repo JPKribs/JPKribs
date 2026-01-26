@@ -44,9 +44,9 @@
     <text x="62" y="435" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Best streak:</text>
     <text x="258" y="435" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">7 days</text>
     <text x="62" y="458" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Commits in 2026:</text>
-    <text x="258" y="458" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">75</text>
+    <text x="258" y="458" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">89</text>
     <text x="62" y="481" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total commits:</text>
-    <text x="258" y="481" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">390</text>
+    <text x="258" y="481" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">444</text>
   </g>
 
   <!-- Languages Box (Center) -->
@@ -87,5 +87,5 @@
 
   <line x1="50" y1="525" x2="750" y2="525" stroke="#30363d" />
   <text x="50" y="548" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">🌐 joseph.kribs.net  •  ✉️ joseph@kribs.net</text>
-  <text x="750" y="548" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">📍 Littleton, CO • Jan 25, 2026</text>
+  <text x="750" y="548" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">📍 Littleton, CO • Jan 26, 2026</text>
 </svg>
