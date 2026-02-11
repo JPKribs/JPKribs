@@ -19,16 +19,23 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Fetch star counts
-          SWIFT_STARS=$(curl -s https://api.github.com/repos/jellyfin/Swiftfin | jq -r '.stargazers_count')
+          # Fetch star counts (authenticated to avoid rate limits)
+          SWIFT_STARS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            https://api.github.com/repos/jellyfin/Swiftfin | jq -r '.stargazers_count // 0')
+          if ! [[ "$SWIFT_STARS" =~ ^[0-9]+$ ]]; then SWIFT_STARS=0; fi
           if [ "$SWIFT_STARS" -gt 1000 ]; then
             SWIFT_STARS_FORMATTED="$(echo "scale=1; $SWIFT_STARS/1000" | bc)k"
           else
             SWIFT_STARS_FORMATTED="$SWIFT_STARS"
           fi
 
-          PROXY_STARS=$(curl -s https://api.github.com/repos/JPKribs/jellyfin-discovery-proxy | jq -r '.stargazers_count')
-          POSTER_STARS=$(curl -s https://api.github.com/repos/JPKribs/jellyfin-plugin-episodepostergenerator | jq -r '.stargazers_count')
+          PROXY_STARS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            https://api.github.com/repos/JPKribs/jellyfin-discovery-proxy | jq -r '.stargazers_count // 0')
+          if ! [[ "$PROXY_STARS" =~ ^[0-9]+$ ]]; then PROXY_STARS=0; fi
+
+          POSTER_STARS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            https://api.github.com/repos/JPKribs/jellyfin-plugin-episodepostergenerator | jq -r '.stargazers_count // 0')
+          if ! [[ "$POSTER_STARS" =~ ^[0-9]+$ ]]; then POSTER_STARS=0; fi
           UPDATED=$(date +'%b %d, %Y')
 
           # Fetch real GitHub activity data
@@ -55,6 +62,52 @@ jobs:
           TOTAL_POSTS=${TOTAL_POSTS:-0}
           TOTAL_REPLIES=${TOTAL_REPLIES:-0}
           TOTAL_DISCUSSIONS=${TOTAL_DISCUSSIONS:-0}
+
+          # Read history for fallback and delta computation
+          if [ -f stats-history.json ]; then
+            PREV_DATA=$(jq '.[0]' stats-history.json)
+            OLD_DATA=$(jq '.[-1]' stats-history.json)
+          else
+            PREV_DATA="{}"
+            OLD_DATA="{}"
+          fi
+
+          # Fallback: if API returned 0, use previous day's value
+          if [ "$SWIFT_STARS" -eq 0 ]; then
+            SWIFT_STARS=$(echo "$PREV_DATA" | jq -r '.swift_stars // 0')
+            if ! [[ "$SWIFT_STARS" =~ ^[0-9]+$ ]]; then SWIFT_STARS=0; fi
+            if [ "$SWIFT_STARS" -gt 1000 ]; then
+              SWIFT_STARS_FORMATTED="$(echo "scale=1; $SWIFT_STARS/1000" | bc)k"
+            else
+              SWIFT_STARS_FORMATTED="$SWIFT_STARS"
+            fi
+          fi
+          if [ "$PROXY_STARS" -eq 0 ]; then
+            PROXY_STARS=$(echo "$PREV_DATA" | jq -r '.proxy_stars // 0')
+            if ! [[ "$PROXY_STARS" =~ ^[0-9]+$ ]]; then PROXY_STARS=0; fi
+          fi
+          if [ "$POSTER_STARS" -eq 0 ]; then
+            POSTER_STARS=$(echo "$PREV_DATA" | jq -r '.poster_stars // 0')
+            if ! [[ "$POSTER_STARS" =~ ^[0-9]+$ ]]; then POSTER_STARS=0; fi
+          fi
+          if [ "$TOTAL_COMMITS" -eq 0 ]; then
+            TOTAL_COMMITS=$(echo "$PREV_DATA" | jq -r '.total_commits // 0')
+          fi
+          if [ "$YEAR_COMMITS" -eq 0 ]; then
+            YEAR_COMMITS=$(echo "$PREV_DATA" | jq -r '.year_commits // 0')
+          fi
+          if [ "$BEST_STREAK" -eq 0 ]; then
+            BEST_STREAK=$(echo "$PREV_DATA" | jq -r '.best_streak // 0')
+          fi
+          if [ "$TOTAL_POSTS" -eq 0 ]; then
+            TOTAL_POSTS=$(echo "$PREV_DATA" | jq -r '.total_posts // 0')
+          fi
+          if [ "$TOTAL_REPLIES" -eq 0 ]; then
+            TOTAL_REPLIES=$(echo "$PREV_DATA" | jq -r '.total_replies // 0')
+          fi
+          if [ "$TOTAL_DISCUSSIONS" -eq 0 ]; then
+            TOTAL_DISCUSSIONS=$(echo "$PREV_DATA" | jq -r '.total_discussions // 0')
+          fi
 
           # Parse top 3 languages from the lines
           LANG1_NAME=$(echo "$LANG1_LINE" | awk '{print $2}')
@@ -112,6 +165,94 @@ jobs:
             *) LANG3_COLOR="#8B949E" ;;
           esac
 
+          # Compute deltas (current vs 7 days ago)
+          format_delta() {
+            local val=$1
+            if [ "$val" -gt 0 ]; then echo "+${val}"
+            elif [ "$val" -lt 0 ]; then echo "${val}"
+            else echo "--"
+            fi
+          }
+          delta_color() {
+            local val=$1
+            if [ "$val" -gt 0 ]; then echo "#3fb950"
+            elif [ "$val" -lt 0 ]; then echo "#f85149"
+            else echo "#8b949e"
+            fi
+          }
+
+          OLD_SWIFT=$(echo "$OLD_DATA" | jq -r '.swift_stars // 0')
+          OLD_PROXY=$(echo "$OLD_DATA" | jq -r '.proxy_stars // 0')
+          OLD_POSTER=$(echo "$OLD_DATA" | jq -r '.poster_stars // 0')
+          OLD_COMMITS=$(echo "$OLD_DATA" | jq -r '.total_commits // 0')
+          OLD_YEAR=$(echo "$OLD_DATA" | jq -r '.year_commits // 0')
+          OLD_POSTS=$(echo "$OLD_DATA" | jq -r '.total_posts // 0')
+          OLD_REPLIES=$(echo "$OLD_DATA" | jq -r '.total_replies // 0')
+          OLD_DISCUSSIONS=$(echo "$OLD_DATA" | jq -r '.total_discussions // 0')
+
+          D_SWIFT=$((SWIFT_STARS - OLD_SWIFT))
+          D_PROXY=$((PROXY_STARS - OLD_PROXY))
+          D_POSTER=$((POSTER_STARS - OLD_POSTER))
+          D_COMMITS=$((TOTAL_COMMITS - OLD_COMMITS))
+          D_YEAR=$((YEAR_COMMITS - OLD_YEAR))
+          D_POSTS=$((TOTAL_POSTS - OLD_POSTS))
+          D_REPLIES=$((TOTAL_REPLIES - OLD_REPLIES))
+          D_DISCUSSIONS=$((TOTAL_DISCUSSIONS - OLD_DISCUSSIONS))
+
+          SWIFT_DELTA=$(format_delta $D_SWIFT)
+          PROXY_DELTA=$(format_delta $D_PROXY)
+          POSTER_DELTA=$(format_delta $D_POSTER)
+          COMMITS_DELTA=$(format_delta $D_COMMITS)
+          YEAR_DELTA=$(format_delta $D_YEAR)
+          POSTS_DELTA=$(format_delta $D_POSTS)
+          REPLIES_DELTA=$(format_delta $D_REPLIES)
+          DISCUSSIONS_DELTA=$(format_delta $D_DISCUSSIONS)
+
+          SWIFT_DELTA_COLOR=$(delta_color $D_SWIFT)
+          PROXY_DELTA_COLOR=$(delta_color $D_PROXY)
+          POSTER_DELTA_COLOR=$(delta_color $D_POSTER)
+          COMMITS_DELTA_COLOR=$(delta_color $D_COMMITS)
+          YEAR_DELTA_COLOR=$(delta_color $D_YEAR)
+          POSTS_DELTA_COLOR=$(delta_color $D_POSTS)
+          REPLIES_DELTA_COLOR=$(delta_color $D_REPLIES)
+          DISCUSSIONS_DELTA_COLOR=$(delta_color $D_DISCUSSIONS)
+
+          echo "Deltas: swift=$SWIFT_DELTA proxy=$PROXY_DELTA poster=$POSTER_DELTA"
+          echo "Deltas: commits=$COMMITS_DELTA year=$YEAR_DELTA"
+          echo "Deltas: posts=$POSTS_DELTA replies=$REPLIES_DELTA discussions=$DISCUSSIONS_DELTA"
+
+          # Update stats history JSON
+          TODAY=$(date +%Y-%m-%d)
+          jq --arg date "$TODAY" \
+             --argjson swift "$SWIFT_STARS" \
+             --argjson proxy "$PROXY_STARS" \
+             --argjson poster "$POSTER_STARS" \
+             --argjson commits "$TOTAL_COMMITS" \
+             --argjson year "$YEAR_COMMITS" \
+             --argjson streak "$BEST_STREAK" \
+             --argjson posts "$TOTAL_POSTS" \
+             --argjson replies "$TOTAL_REPLIES" \
+             --argjson discussions "$TOTAL_DISCUSSIONS" \
+             --arg l1name "$LANG1_NAME" --argjson l1pct "$LANG1_PCT" \
+             --arg l2name "$LANG2_NAME" --argjson l2pct "$LANG2_PCT" \
+             --arg l3name "$LANG3_NAME" --argjson l3pct "$LANG3_PCT" \
+             '[{
+               date: $date,
+               swift_stars: $swift,
+               proxy_stars: $proxy,
+               poster_stars: $poster,
+               total_commits: $commits,
+               year_commits: $year,
+               best_streak: $streak,
+               total_posts: $posts,
+               total_replies: $replies,
+               total_discussions: $discussions,
+               lang1: { name: $l1name, pct: $l1pct },
+               lang2: { name: $l2name, pct: $l2pct },
+               lang3: { name: $l3name, pct: $l3pct }
+             }] + . | .[0:7]' stats-history.json > stats-history-tmp.json
+          mv stats-history-tmp.json stats-history.json
+
           # Copy template and substitute variables
           cp profile-summary-template.svg profile-summary.svg
 
@@ -139,10 +280,28 @@ jobs:
           sed -i "s|LANG3_WIDTH|$LANG3_WIDTH|g" profile-summary.svg
           sed -i "s|LANG3_COLOR|$LANG3_COLOR|g" profile-summary.svg
 
+          # Delta substitutions (color first to avoid partial matches)
+          sed -i "s|SWIFT_DELTA_COLOR|$SWIFT_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|SWIFT_DELTA|$SWIFT_DELTA|g" profile-summary.svg
+          sed -i "s|PROXY_DELTA_COLOR|$PROXY_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|PROXY_DELTA|$PROXY_DELTA|g" profile-summary.svg
+          sed -i "s|POSTER_DELTA_COLOR|$POSTER_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|POSTER_DELTA|$POSTER_DELTA|g" profile-summary.svg
+          sed -i "s|COMMITS_DELTA_COLOR|$COMMITS_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|COMMITS_DELTA|$COMMITS_DELTA|g" profile-summary.svg
+          sed -i "s|YEAR_DELTA_COLOR|$YEAR_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|YEAR_DELTA|$YEAR_DELTA|g" profile-summary.svg
+          sed -i "s|POSTS_DELTA_COLOR|$POSTS_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|POSTS_DELTA|$POSTS_DELTA|g" profile-summary.svg
+          sed -i "s|REPLIES_DELTA_COLOR|$REPLIES_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|REPLIES_DELTA|$REPLIES_DELTA|g" profile-summary.svg
+          sed -i "s|DISCUSSIONS_DELTA_COLOR|$DISCUSSIONS_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|DISCUSSIONS_DELTA|$DISCUSSIONS_DELTA|g" profile-summary.svg
+
       - name: Commit and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add profile-summary.svg
+          git add profile-summary.svg stats-history.json
           git commit -m "chore: update profile SVG with latest stats" || exit 0
           git push

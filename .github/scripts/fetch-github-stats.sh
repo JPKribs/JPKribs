@@ -21,7 +21,7 @@ fi
 TOTAL_COMMITS=0
 YEAR_COMMITS=0
 declare -A DAILY_COMMITS
-declare -A LANGUAGE_REPOS
+declare -A LANGUAGE_BYTES
 
 echo "Fetching commit data..." >&2
 for repo in $REPOS; do
@@ -76,12 +76,17 @@ for repo in $REPOS; do
     DAILY_COMMITS[$DAY]=$((${DAILY_COMMITS[$DAY]:-0} + 1))
   done
 
-  # Get primary language for this repo
-  PRIMARY_LANG=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    "${GITHUB_API}/repos/${repo}" | jq -r '.language // empty' 2>/dev/null)
+  # Get language byte counts for this repo
+  REPO_LANGS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+    "${GITHUB_API}/repos/${repo}/languages" 2>/dev/null)
 
-  if [ -n "$PRIMARY_LANG" ] && [ "$PRIMARY_LANG" != "null" ]; then
-    LANGUAGE_REPOS[$PRIMARY_LANG]=$((${LANGUAGE_REPOS[$PRIMARY_LANG]:-0} + 1))
+  if [ -n "$REPO_LANGS" ] && [ "$REPO_LANGS" != "null" ]; then
+    for lang in $(echo "$REPO_LANGS" | jq -r 'keys[]' 2>/dev/null); do
+      bytes=$(echo "$REPO_LANGS" | jq -r --arg l "$lang" '.[$l] // 0' 2>/dev/null)
+      if [[ "$bytes" =~ ^[0-9]+$ ]]; then
+        LANGUAGE_BYTES[$lang]=$((${LANGUAGE_BYTES[$lang]:-0} + bytes))
+      fi
+    done
   fi
 done
 
@@ -120,15 +125,18 @@ if [ "$TEMP_STREAK" -gt "$BEST_STREAK" ]; then
   BEST_STREAK=$TEMP_STREAK
 fi
 
-# Get top 3 languages by repo count
-TOTAL_REPO_COUNT=$(echo "$REPOS" | grep -c .)
-if [ "$TOTAL_REPO_COUNT" -eq 0 ]; then
-  TOTAL_REPO_COUNT=1
+# Get top 3 languages by byte count
+TOTAL_BYTES=0
+for lang in "${!LANGUAGE_BYTES[@]}"; do
+  TOTAL_BYTES=$((TOTAL_BYTES + ${LANGUAGE_BYTES[$lang]}))
+done
+if [ "$TOTAL_BYTES" -eq 0 ]; then
+  TOTAL_BYTES=1
 fi
 
-TOP_LANGS=$(for lang in "${!LANGUAGE_REPOS[@]}"; do
-  count=${LANGUAGE_REPOS[$lang]}
-  pct=$((count * 100 / TOTAL_REPO_COUNT))
+TOP_LANGS=$(for lang in "${!LANGUAGE_BYTES[@]}"; do
+  bytes=${LANGUAGE_BYTES[$lang]}
+  pct=$((bytes * 100 / TOTAL_BYTES))
   echo "$pct $lang"
 done | sort -rn | head -3)
 
