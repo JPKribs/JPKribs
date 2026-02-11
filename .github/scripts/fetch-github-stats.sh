@@ -23,57 +23,41 @@ YEAR_COMMITS=0
 declare -A DAILY_COMMITS
 declare -A LANGUAGE_BYTES
 
+# Helper: paginated commit fetch — returns all commit dates for a given query
+fetch_commit_dates() {
+  local url="$1"
+  local page=1
+  while true; do
+    RESPONSE=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+      "${url}&per_page=100&page=${page}")
+    DATES=$(echo "$RESPONSE" | jq -r '.[]? | .commit.author.date' 2>/dev/null)
+    if [ -z "$DATES" ]; then break; fi
+    echo "$DATES"
+    COUNT=$(echo "$DATES" | wc -l)
+    if [ "$COUNT" -lt 100 ]; then break; fi
+    page=$((page + 1))
+  done
+}
+
+YEAR_START="${CURRENT_YEAR}-01-01T00:00:00Z"
+
 echo "Fetching commit data..." >&2
 for repo in $REPOS; do
-  # Get total commit count for this repo
-  REPO_TOTAL=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=1" | \
-    jq -r 'length')
+  # Fetch ALL commits for this repo by this user (paginated)
+  ALL_DATES=$(fetch_commit_dates "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}")
+  REPO_COUNT=$(echo "$ALL_DATES" | grep -c . 2>/dev/null || echo 0)
+  TOTAL_COMMITS=$((TOTAL_COMMITS + REPO_COUNT))
+  echo "  $repo: $REPO_COUNT commits" >&2
 
-  # Try to get commit count from contributor stats
-  CONTRIBUTOR_STATS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    "${GITHUB_API}/repos/${repo}/stats/contributors")
+  # Process each commit date for yearly stats and daily tracking
+  for commit_date in $ALL_DATES; do
+    DAY=$(echo "$commit_date" | cut -d'T' -f1)
+    DAILY_COMMITS[$DAY]=$((${DAILY_COMMITS[$DAY]:-0} + 1))
 
-  CONTRIBUTOR_COMMITS=$(echo "$CONTRIBUTOR_STATS" | \
-    jq -r --arg user "$USERNAME" '.[] | select(.author.login == $user) | .total // 0' 2>/dev/null)
-
-  # Fallback: if contributor stats failed or returned 0, count commits directly
-  if [ -z "$CONTRIBUTOR_COMMITS" ] || [ "$CONTRIBUTOR_COMMITS" = "0" ]; then
-    echo "  Contributor stats unavailable for $repo, counting commits directly..." >&2
-    DIRECT_COUNT=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-      "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=100" | \
-      jq -r 'length' 2>/dev/null)
-
-    if [ -n "$DIRECT_COUNT" ] && [ "$DIRECT_COUNT" != "0" ]; then
-      TOTAL_COMMITS=$((TOTAL_COMMITS + DIRECT_COUNT))
-      echo "    Found $DIRECT_COUNT commits via direct count" >&2
+    # Count yearly commits
+    if [[ "$commit_date" > "${YEAR_START}" ]] || [[ "$commit_date" == "${YEAR_START}" ]]; then
+      YEAR_COMMITS=$((YEAR_COMMITS + 1))
     fi
-  else
-    TOTAL_COMMITS=$((TOTAL_COMMITS + CONTRIBUTOR_COMMITS))
-    echo "  $repo: $CONTRIBUTOR_COMMITS commits" >&2
-  fi
-
-  # Get commits from current year for yearly stats and daily tracking
-  YEAR_START="${CURRENT_YEAR}-01-01T00:00:00Z"
-  YEAR_COMMITS_DATA=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=100&since=${YEAR_START}" | \
-    jq -r '.[]? | .commit.author.date' 2>/dev/null)
-
-  for commit_date in $YEAR_COMMITS_DATA; do
-    YEAR_COMMITS=$((YEAR_COMMITS + 1))
-    DAY=$(echo "$commit_date" | cut -d'T' -f1)
-    DAILY_COMMITS[$DAY]=$((${DAILY_COMMITS[$DAY]:-0} + 1))
-  done
-
-  # Also get commits from past 365 days for streak calculation
-  PAST_YEAR=$(date -u -d '365 days ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-365d +%Y-%m-%dT%H:%M:%SZ)
-  PAST_COMMITS_DATA=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}&per_page=100&since=${PAST_YEAR}" | \
-    jq -r '.[]? | .commit.author.date' 2>/dev/null)
-
-  for commit_date in $PAST_COMMITS_DATA; do
-    DAY=$(echo "$commit_date" | cut -d'T' -f1)
-    DAILY_COMMITS[$DAY]=$((${DAILY_COMMITS[$DAY]:-0} + 1))
   done
 
   # Get language byte counts for this repo
