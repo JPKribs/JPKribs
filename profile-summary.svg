@@ -12,6 +12,7 @@
     <path fill="#FFFFFF" d="M47.0606,36.6607c-0.0014-0.0018-0.0027-0.0031-0.0042-0.0048c0.0657-0.2236,0.1335-0.4458,0.191-0.675c2.465-9.8209-3.5511-21.4319-13.7316-27.5454c4.4613,6.0479,6.4339,13.3733,4.6813,19.7795c-0.1563,0.5714-0.3442,1.1198-0.5519,1.6528c-0.2254-0.1481-0.5094-0.3162-0.8908-0.5265c0,0-10.1269-6.2527-21.1028-17.3122c-0.288-0.2903,5.8528,8.777,12.8219,16.1399c-3.2834-1.8427-12.4338-8.5004-18.2266-13.8023c0.7117,1.1869,1.5582,2.3298,2.4887,3.4301c4.8375,6.1349,11.1462,13.7044,18.7043,19.5169c-5.3104,3.2498-12.8141,3.5025-20.2852,0.0034c-1.8479-0.866-3.5851-1.9109-5.1932-3.0981c3.1625,5.0585,8.0332,9.4229,13.9613,11.9708c7.0695,3.0381,14.0996,2.8321,19.3356,0.0498l-0.0041,0.006c0.0239-0.0151,0.0543-0.0316,0.0791-0.0469c0.215-0.1156,0.4284-0.2333,0.6371-0.3576c2.5157-1.3058,7.4847-2.6306,10.1518,2.5588C50.7755,49.6699,52.1635,42.9395,47.0606,36.6607z"/>
   </g>
   <text x="160" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#8b949e">⭐ 3.6k Stars</text>
+  <text x="160" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+86</text>
 
   <rect x="290" y="140" width="220" height="220" rx="12" fill="#161b22" stroke="#00ADD8" stroke-width="1.5"/>
   <text x="400" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#f0f6fc">Discovery Proxy</text>
@@ -23,6 +24,7 @@
     <path fill="#00ADD8" d="M161.5,76.7c-9.1-0.2-17.4-2.8-24.4-8.8c-5.9-5.1-9.6-11.6-10.8-19.3c-1.8-11.3,1.3-21.3,8.1-30.2c7.3-9.6,16.1-14.6,28-16.7c10.2-1.8,19.8-0.8,28.5,5.1c7.9,5.4,12.8,12.7,14.1,22.3c1.7,13.5-2.2,24.5-11.5,33.9c-6.6,6.7-14.7,10.9-24,12.8C166.8,76.3,164.1,76.4,161.5,76.7z M185.3,36.3c-0.1-1.3-0.1-2.3-0.3-3.3c-1.8-9.9-10.9-15.5-20.4-13.3c-9.3,2.1-15.3,8-17.5,17.4c-1.8,7.8,2,15.7,9.2,18.9c5.5,2.4,11,2.1,16.3-0.6C180.5,51.3,184.8,44.9,185.3,36.3z"/>
   </g>
   <text x="400" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#8b949e">⭐ 7 Stars</text>
+  <text x="400" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">--</text>
 
   <rect x="530" y="140" width="220" height="220" rx="12" fill="#161b22" stroke="#512BD4" stroke-width="1.5"/>
   <text x="640" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#f0f6fc">Poster Generator</text>
@@ -34,6 +36,7 @@
     <path d="M392.667 187.695H359.457V289.515H340.272V187.695H307.143V171H392.667V187.695Z" fill="white"/>
   </g>
   <text x="640" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#8b949e">⭐ 7 Stars</text>
+  <text x="640" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">--</text>
 
   <line x1="50" y1="370" x2="750" y2="370" stroke="#30363d" />
 
@@ -44,9 +47,11 @@
     <text x="62" y="435" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Best streak:</text>
     <text x="258" y="435" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">8 days</text>
     <text x="62" y="458" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Commits in 2026:</text>
-    <text x="258" y="458" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">202</text>
+    <text x="230" y="458" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">203</text>
+    <text x="258" y="458" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+1</text>
     <text x="62" y="481" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total commits:</text>
-    <text x="258" y="481" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">493</text>
+    <text x="230" y="481" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">566</text>
+    <text x="258" y="481" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+73</text>
   </g>
 
   <!-- Languages Box (Center) -->
@@ -56,21 +61,21 @@
 
     <!-- Language 1 bar -->
     <rect x="302" y="435" width="196" height="6" rx="2" fill="#21262d"/>
-    <rect x="302" y="435" width="86" height="6" rx="2" fill="#F05138"/>
+    <rect x="302" y="435" width="162" height="6" rx="2" fill="#F05138"/>
     <text x="302" y="430" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Swift</text>
-    <text x="498" y="430" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">44%</text>
+    <text x="498" y="430" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">83%</text>
 
     <!-- Language 2 bar -->
     <rect x="302" y="460" width="196" height="6" rx="2" fill="#21262d"/>
-    <rect x="302" y="460" width="43" height="6" rx="2" fill="#512BD4"/>
+    <rect x="302" y="460" width="19" height="6" rx="2" fill="#512BD4"/>
     <text x="302" y="455" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">C#</text>
-    <text x="498" y="455" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">22%</text>
+    <text x="498" y="455" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">10%</text>
 
     <!-- Language 3 bar -->
     <rect x="302" y="485" width="196" height="6" rx="2" fill="#21262d"/>
-    <rect x="302" y="485" width="21" height="6" rx="2" fill="#00ADD8"/>
-    <text x="302" y="480" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Go</text>
-    <text x="498" y="480" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">11%</text>
+    <rect x="302" y="485" width="5" height="6" rx="2" fill="#F7DF1E"/>
+    <text x="302" y="480" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">JavaScript</text>
+    <text x="498" y="480" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">3%</text>
   </g>
 
   <!-- Community Box (Right) -->
@@ -78,11 +83,14 @@
     <rect x="530" y="385" width="220" height="115" rx="8" fill="#161b22" stroke="#30363d"/>
     <text x="640" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f0f6fc">Community</text>
     <text x="542" y="435" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total posts:</text>
-    <text x="738" y="435" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">80</text>
+    <text x="710" y="435" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">80</text>
+    <text x="738" y="435" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">--</text>
     <text x="542" y="458" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total replies:</text>
-    <text x="738" y="458" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">360</text>
+    <text x="710" y="458" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">360</text>
+    <text x="738" y="458" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">--</text>
     <text x="542" y="481" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total discussions:</text>
-    <text x="738" y="481" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">223</text>
+    <text x="710" y="481" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">223</text>
+    <text x="738" y="481" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">--</text>
   </g>
 
   <line x1="50" y1="525" x2="750" y2="525" stroke="#30363d" />

@@ -1,6 +1,30 @@
 [
   {
     "date": "2026-02-11",
+    "swift_stars": 3686,
+    "proxy_stars": 7,
+    "poster_stars": 7,
+    "total_commits": 566,
+    "year_commits": 203,
+    "best_streak": 8,
+    "total_posts": 80,
+    "total_replies": 360,
+    "total_discussions": 223,
+    "lang1": {
+      "name": "Swift",
+      "pct": 83
+    },
+    "lang2": {
+      "name": "C#",
+      "pct": 10
+    },
+    "lang3": {
+      "name": "JavaScript",
+      "pct": 3
+    }
+  },
+  {
+    "date": "2026-02-11",
     "swift_stars": 3600,
     "proxy_stars": 7,
     "poster_stars": 7,
@@ -10,9 +34,18 @@
     "total_posts": 80,
     "total_replies": 360,
     "total_discussions": 223,
-    "lang1": { "name": "Swift", "pct": 44 },
-    "lang2": { "name": "C#", "pct": 22 },
-    "lang3": { "name": "Go", "pct": 11 }
+    "lang1": {
+      "name": "Swift",
+      "pct": 44
+    },
+    "lang2": {
+      "name": "C#",
+      "pct": 22
+    },
+    "lang3": {
+      "name": "Go",
+      "pct": 11
+    }
   },
   {
     "date": "2026-02-10",
@@ -25,9 +58,18 @@
     "total_posts": 80,
     "total_replies": 360,
     "total_discussions": 223,
-    "lang1": { "name": "Swift", "pct": 44 },
-    "lang2": { "name": "C#", "pct": 22 },
-    "lang3": { "name": "Go", "pct": 11 }
+    "lang1": {
+      "name": "Swift",
+      "pct": 44
+    },
+    "lang2": {
+      "name": "C#",
+      "pct": 22
+    },
+    "lang3": {
+      "name": "Go",
+      "pct": 11
+    }
   },
   {
     "date": "2026-02-09",
@@ -40,9 +82,18 @@
     "total_posts": 80,
     "total_replies": 360,
     "total_discussions": 223,
-    "lang1": { "name": "Swift", "pct": 44 },
-    "lang2": { "name": "C#", "pct": 22 },
-    "lang3": { "name": "Go", "pct": 11 }
+    "lang1": {
+      "name": "Swift",
+      "pct": 44
+    },
+    "lang2": {
+      "name": "C#",
+      "pct": 22
+    },
+    "lang3": {
+      "name": "Go",
+      "pct": 11
+    }
   },
   {
     "date": "2026-02-08",
@@ -55,9 +106,18 @@
     "total_posts": 80,
     "total_replies": 360,
     "total_discussions": 223,
-    "lang1": { "name": "Swift", "pct": 44 },
-    "lang2": { "name": "C#", "pct": 22 },
-    "lang3": { "name": "Go", "pct": 11 }
+    "lang1": {
+      "name": "Swift",
+      "pct": 44
+    },
+    "lang2": {
+      "name": "C#",
+      "pct": 22
+    },
+    "lang3": {
+      "name": "Go",
+      "pct": 11
+    }
   },
   {
     "date": "2026-02-07",
@@ -70,9 +130,18 @@
     "total_posts": 80,
     "total_replies": 360,
     "total_discussions": 223,
-    "lang1": { "name": "Swift", "pct": 44 },
-    "lang2": { "name": "C#", "pct": 22 },
-    "lang3": { "name": "Go", "pct": 11 }
+    "lang1": {
+      "name": "Swift",
+      "pct": 44
+    },
+    "lang2": {
+      "name": "C#",
+      "pct": 22
+    },
+    "lang3": {
+      "name": "Go",
+      "pct": 11
+    }
   },
   {
     "date": "2026-02-06",
@@ -85,23 +154,17 @@
     "total_posts": 80,
     "total_replies": 360,
     "total_discussions": 223,
-    "lang1": { "name": "Swift", "pct": 44 },
-    "lang2": { "name": "C#", "pct": 22 },
-    "lang3": { "name": "Go", "pct": 11 }
-  },
-  {
-    "date": "2026-02-05",
-    "swift_stars": 3600,
-    "proxy_stars": 7,
-    "poster_stars": 7,
-    "total_commits": 493,
-    "year_commits": 202,
-    "best_streak": 8,
-    "total_posts": 80,
-    "total_replies": 360,
-    "total_discussions": 223,
-    "lang1": { "name": "Swift", "pct": 44 },
-    "lang2": { "name": "C#", "pct": 22 },
-    "lang3": { "name": "Go", "pct": 11 }
+    "lang1": {
+      "name": "Swift",
+      "pct": 44
+    },
+    "lang2": {
+      "name": "C#",
+      "pct": 22
+    },
+    "lang3": {
+      "name": "Go",
+      "pct": 11
+    }
   }
 ]
