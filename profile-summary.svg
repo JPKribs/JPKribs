@@ -61,21 +61,21 @@
 
     <!-- Language 1 bar -->
     <rect x="302" y="435" width="196" height="6" rx="2" fill="#21262d"/>
-    <rect x="302" y="435" width="162" height="6" rx="2" fill="#F05138"/>
-    <text x="302" y="430" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Swift</text>
-    <text x="498" y="430" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">83%</text>
+    <rect x="302" y="435" width="0" height="6" rx="2" fill="#8B949E"/>
+    <text x="302" y="430" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Unknown</text>
+    <text x="498" y="430" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">0%</text>
 
     <!-- Language 2 bar -->
     <rect x="302" y="460" width="196" height="6" rx="2" fill="#21262d"/>
-    <rect x="302" y="460" width="19" height="6" rx="2" fill="#512BD4"/>
-    <text x="302" y="455" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">C#</text>
-    <text x="498" y="455" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">10%</text>
+    <rect x="302" y="460" width="0" height="6" rx="2" fill="#8B949E"/>
+    <text x="302" y="455" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Unknown</text>
+    <text x="498" y="455" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">0%</text>
 
     <!-- Language 3 bar -->
     <rect x="302" y="485" width="196" height="6" rx="2" fill="#21262d"/>
-    <rect x="302" y="485" width="5" height="6" rx="2" fill="#F7DF1E"/>
-    <text x="302" y="480" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">JavaScript</text>
-    <text x="498" y="480" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">3%</text>
+    <rect x="302" y="485" width="0" height="6" rx="2" fill="#8B949E"/>
+    <text x="302" y="480" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">Unknown</text>
+    <text x="498" y="480" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#8b949e">0%</text>
   </g>
 
   <!-- Community Box (Right) -->
