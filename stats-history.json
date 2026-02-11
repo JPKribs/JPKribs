@@ -21,6 +21,11 @@
     "lang3": {
       "name": "JavaScript",
       "pct": 3
+    },
+    "sync_stars": 0,
+    "lang4": {
+      "name": "Go",
+      "pct": 2
     }
   },
   {
@@ -45,6 +50,11 @@
     "lang3": {
       "name": "JavaScript",
       "pct": 3
+    },
+    "sync_stars": 0,
+    "lang4": {
+      "name": "Go",
+      "pct": 2
     }
   },
   {
@@ -69,6 +79,11 @@
     "lang3": {
       "name": "JavaScript",
       "pct": 3
+    },
+    "sync_stars": 0,
+    "lang4": {
+      "name": "Go",
+      "pct": 2
     }
   },
   {
@@ -93,6 +108,11 @@
     "lang3": {
       "name": "JavaScript",
       "pct": 3
+    },
+    "sync_stars": 0,
+    "lang4": {
+      "name": "Go",
+      "pct": 2
     }
   },
   {
@@ -117,6 +137,11 @@
     "lang3": {
       "name": "Go",
       "pct": 11
+    },
+    "sync_stars": 0,
+    "lang4": {
+      "name": "Go",
+      "pct": 2
     }
   },
   {
@@ -141,6 +166,11 @@
     "lang3": {
       "name": "Go",
       "pct": 11
+    },
+    "sync_stars": 0,
+    "lang4": {
+      "name": "Go",
+      "pct": 2
     }
   },
   {
@@ -165,6 +195,11 @@
     "lang3": {
       "name": "Go",
       "pct": 11
+    },
+    "sync_stars": 0,
+    "lang4": {
+      "name": "Go",
+      "pct": 2
     }
   }
 ]

@@ -126,7 +126,7 @@ TOP_LANGS=$(for lang in "${!LANGUAGE_BYTES[@]}"; do
   bytes=${LANGUAGE_BYTES[$lang]}
   pct=$((bytes * 100 / TOTAL_BYTES))
   echo "$pct $lang"
-done | sort -rn | head -3)
+done | sort -rn | head -4)
 
 # If no languages found, provide defaults
 if [ -z "$TOP_LANGS" ]; then
@@ -170,3 +170,4 @@ echo "TOTAL_DISCUSSIONS=${TOTAL_DISCUSSIONS}"
 echo "LANG1_LINE='$(echo "$TOP_LANGS" | sed -n '1p')'"
 echo "LANG2_LINE='$(echo "$TOP_LANGS" | sed -n '2p')'"
 echo "LANG3_LINE='$(echo "$TOP_LANGS" | sed -n '3p')'"
+echo "LANG4_LINE='$(echo "$TOP_LANGS" | sed -n '4p')'"
