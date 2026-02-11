@@ -33,7 +33,7 @@ fetch_commit_dates() {
     DATES=$(echo "$RESPONSE" | jq -r '.[]? | .commit.author.date' 2>/dev/null)
     if [ -z "$DATES" ]; then break; fi
     echo "$DATES"
-    COUNT=$(echo "$DATES" | wc -l)
+    COUNT=$(echo "$DATES" | wc -l | tr -d ' ')
     if [ "$COUNT" -lt 100 ]; then break; fi
     page=$((page + 1))
   done
@@ -45,7 +45,11 @@ echo "Fetching commit data..." >&2
 for repo in $REPOS; do
   # Fetch ALL commits for this repo by this user (paginated)
   ALL_DATES=$(fetch_commit_dates "${GITHUB_API}/repos/${repo}/commits?author=${USERNAME}")
-  REPO_COUNT=$(echo "$ALL_DATES" | grep -c . 2>/dev/null || echo 0)
+  if [ -z "$ALL_DATES" ]; then
+    REPO_COUNT=0
+  else
+    REPO_COUNT=$(echo "$ALL_DATES" | wc -l | tr -d ' ')
+  fi
   TOTAL_COMMITS=$((TOTAL_COMMITS + REPO_COUNT))
   echo "  $repo: $REPO_COUNT commits" >&2
 

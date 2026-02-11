@@ -57,7 +57,7 @@ jobs:
           # Set defaults if empty
           TOTAL_COMMITS=${TOTAL_COMMITS:-0}
           YEAR_COMMITS=${YEAR_COMMITS:-0}
-          CURRENT_YEAR=${CURRENT_YEAR:-2026}
+          CURRENT_YEAR=${CURRENT_YEAR:-$(date +%Y)}
           BEST_STREAK=${BEST_STREAK:-0}
           TOTAL_POSTS=${TOTAL_POSTS:-0}
           TOTAL_REPLIES=${TOTAL_REPLIES:-0}
@@ -109,13 +109,14 @@ jobs:
             TOTAL_DISCUSSIONS=$(echo "$PREV_DATA" | jq -r '.total_discussions // 0')
           fi
 
-          # Parse top 3 languages from the lines
-          LANG1_NAME=$(echo "$LANG1_LINE" | awk '{print $2}')
+          # Parse top 3 languages from the lines (format: "44 Swift" or "22 C#")
+          # Use $1 for pct and everything after for name (handles multi-word names)
           LANG1_PCT=$(echo "$LANG1_LINE" | awk '{print $1}')
-          LANG2_NAME=$(echo "$LANG2_LINE" | awk '{print $2}')
+          LANG1_NAME=$(echo "$LANG1_LINE" | awk '{$1=""; print}' | sed 's/^ //')
           LANG2_PCT=$(echo "$LANG2_LINE" | awk '{print $1}')
-          LANG3_NAME=$(echo "$LANG3_LINE" | awk '{print $2}')
+          LANG2_NAME=$(echo "$LANG2_LINE" | awk '{$1=""; print}' | sed 's/^ //')
           LANG3_PCT=$(echo "$LANG3_LINE" | awk '{print $1}')
+          LANG3_NAME=$(echo "$LANG3_LINE" | awk '{$1=""; print}' | sed 's/^ //')
 
           # Set defaults for languages
           LANG1_NAME=${LANG1_NAME:-"Unknown"}
