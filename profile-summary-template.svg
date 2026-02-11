@@ -38,8 +38,6 @@
   <text x="640" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#8b949e">⭐ POSTER_STARS Stars</text>
   <text x="640" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="POSTER_DELTA_COLOR">POSTER_DELTA</text>
 
-  <line x1="50" y1="370" x2="750" y2="370" stroke="#30363d" />
-
   <!-- Contributions Box (Left) -->
   <g id="contributions">
     <rect x="50" y="385" width="220" height="115" rx="8" fill="#161b22" stroke="#30363d"/>

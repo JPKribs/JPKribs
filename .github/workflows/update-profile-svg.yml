@@ -24,7 +24,7 @@ jobs:
             https://api.github.com/repos/jellyfin/Swiftfin | jq -r '.stargazers_count // 0')
           if ! [[ "$SWIFT_STARS" =~ ^[0-9]+$ ]]; then SWIFT_STARS=0; fi
           if [ "$SWIFT_STARS" -gt 1000 ]; then
-            SWIFT_STARS_FORMATTED="$(echo "scale=1; $SWIFT_STARS/1000" | bc)k"
+            SWIFT_STARS_FORMATTED="$(echo "scale=1; ($SWIFT_STARS+50)/1000" | bc)k"
           else
             SWIFT_STARS_FORMATTED="$SWIFT_STARS"
           fi
@@ -77,7 +77,7 @@ jobs:
             SWIFT_STARS=$(echo "$PREV_DATA" | jq -r '.swift_stars // 0')
             if ! [[ "$SWIFT_STARS" =~ ^[0-9]+$ ]]; then SWIFT_STARS=0; fi
             if [ "$SWIFT_STARS" -gt 1000 ]; then
-              SWIFT_STARS_FORMATTED="$(echo "scale=1; $SWIFT_STARS/1000" | bc)k"
+              SWIFT_STARS_FORMATTED="$(echo "scale=1; ($SWIFT_STARS+50)/1000" | bc)k"
             else
               SWIFT_STARS_FORMATTED="$SWIFT_STARS"
             fi
