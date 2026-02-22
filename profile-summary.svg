@@ -13,7 +13,7 @@
     <path fill="#FFFFFF" d="M47.0606,36.6607c-0.0014-0.0018-0.0027-0.0031-0.0042-0.0048c0.0657-0.2236,0.1335-0.4458,0.191-0.675c2.465-9.8209-3.5511-21.4319-13.7316-27.5454c4.4613,6.0479,6.4339,13.3733,4.6813,19.7795c-0.1563,0.5714-0.3442,1.1198-0.5519,1.6528c-0.2254-0.1481-0.5094-0.3162-0.8908-0.5265c0,0-10.1269-6.2527-21.1028-17.3122c-0.288-0.2903,5.8528,8.777,12.8219,16.1399c-3.2834-1.8427-12.4338-8.5004-18.2266-13.8023c0.7117,1.1869,1.5582,2.3298,2.4887,3.4301c4.8375,6.1349,11.1462,13.7044,18.7043,19.5169c-5.3104,3.2498-12.8141,3.5025-20.2852,0.0034c-1.8479-0.866-3.5851-1.9109-5.1932-3.0981c3.1625,5.0585,8.0332,9.4229,13.9613,11.9708c7.0695,3.0381,14.0996,2.8321,19.3356,0.0498l-0.0041,0.006c0.0239-0.0151,0.0543-0.0316,0.0791-0.0469c0.215-0.1156,0.4284-0.2333,0.6371-0.3576c2.5157-1.3058,7.4847-2.6306,10.1518,2.5588C50.7755,49.6699,52.1635,42.9395,47.0606,36.6607z"/>
   </g>
   <text x="133" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#8b949e">3.7k ⭐</text>
-  <text x="133" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+10</text>
+  <text x="133" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+8</text>
 
   <!-- Discovery Proxy -->
   <rect x="228" y="140" width="166" height="220" rx="12" fill="#161b22" stroke="#00ADD8" stroke-width="1.5"/>
@@ -62,10 +62,10 @@
     <text x="382" y="422" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">10 days</text>
     <text x="62" y="445" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Commits in 2026:</text>
     <text x="354" y="445" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">241</text>
-    <text x="382" y="445" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+13</text>
+    <text x="382" y="445" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+12</text>
     <text x="62" y="468" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total commits:</text>
     <text x="354" y="468" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">704</text>
-    <text x="382" y="468" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+13</text>
+    <text x="382" y="468" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+12</text>
     <text x="62" y="491" font-family="Arial, sans-serif" font-size="11" fill="#8b949e">Total discussions:</text>
     <text x="354" y="491" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#58a6ff">223</text>
     <text x="382" y="491" text-anchor="end" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">--</text>
@@ -103,5 +103,5 @@
 
   <line x1="50" y1="532" x2="750" y2="532" stroke="#30363d" />
   <text x="50" y="555" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">🌐 joseph.kribs.net  •  ✉️ joseph@kribs.net</text>
-  <text x="750" y="555" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">📍 Littleton, CO • Feb 21, 2026</text>
+  <text x="750" y="555" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">📍 Littleton, CO • Feb 22, 2026</text>
 </svg>
