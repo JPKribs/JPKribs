@@ -18,28 +18,34 @@ jobs:
       - name: Fetch Real-Time Stats
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: a classic PAT (read:user) to include private contributions.
+          STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
         run: |
-          # Fetch star counts (authenticated to avoid rate limits)
-          SWIFT_STARS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            https://api.github.com/repos/jellyfin/Swiftfin | jq -r '.stargazers_count // 0')
-          if ! [[ "$SWIFT_STARS" =~ ^[0-9]+$ ]]; then SWIFT_STARS=0; fi
-          if [ "$SWIFT_STARS" -gt 1000 ]; then
-            SWIFT_STARS_FORMATTED="$(echo "scale=1; ($SWIFT_STARS+50)/1000" | bc)k"
-          else
-            SWIFT_STARS_FORMATTED="$SWIFT_STARS"
-          fi
+          # Helper: fetch a repo's star count, defaulting to 0 on any error.
+          fetch_stars() {
+            local s
+            s=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              "https://api.github.com/repos/$1" | jq -r '.stargazers_count // 0')
+            if ! [[ "$s" =~ ^[0-9]+$ ]]; then s=0; fi
+            echo "$s"
+          }
 
-          PROXY_STARS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            https://api.github.com/repos/JPKribs/jellyfin-discovery-proxy | jq -r '.stargazers_count // 0')
-          if ! [[ "$PROXY_STARS" =~ ^[0-9]+$ ]]; then PROXY_STARS=0; fi
+          # Helper: format large counts as "3.9k".
+          format_k() {
+            if [ "$1" -gt 1000 ]; then
+              echo "$(echo "scale=1; ($1+50)/1000" | bc)k"
+            else
+              echo "$1"
+            fi
+          }
 
-          POSTER_STARS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            https://api.github.com/repos/JPKribs/jellyfin-plugin-episodepostergenerator | jq -r '.stargazers_count // 0')
-          if ! [[ "$POSTER_STARS" =~ ^[0-9]+$ ]]; then POSTER_STARS=0; fi
-
-          SYNC_STARS=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            https://api.github.com/repos/JPKribs/jellyfin-plugin-serversync | jq -r '.stargazers_count // 0')
-          if ! [[ "$SYNC_STARS" =~ ^[0-9]+$ ]]; then SYNC_STARS=0; fi
+          SWIFT_STARS=$(fetch_stars jellyfin/Swiftfin)
+          CUSTOMPAGES_STARS=$(fetch_stars JPKribs/jellyfin-plugin-custompages)
+          POSTER_STARS=$(fetch_stars JPKribs/jellyfin-plugin-episodepostergenerator)
+          SYNC_STARS=$(fetch_stars JPKribs/jellyfin-plugin-serversync)
+          USERMGMT_STARS=$(fetch_stars JPKribs/jellyfin-plugin-usermanagement)
+          YOUTUBE_STARS=$(fetch_stars JPKribs/jellyfin-plugin-youtubeaudio)
+          SWIFT_STARS_FORMATTED=$(format_k "$SWIFT_STARS")
           UPDATED=$(date +'%b %d, %Y')
 
           # Fetch real GitHub activity data
@@ -47,17 +53,12 @@ jobs:
           eval "$(.github/scripts/fetch-github-stats.sh)"
 
           # Debug output
-          echo "TOTAL_COMMITS=$TOTAL_COMMITS"
-          echo "YEAR_COMMITS=$YEAR_COMMITS"
-          echo "CURRENT_YEAR=$CURRENT_YEAR"
-          echo "BEST_STREAK=$BEST_STREAK"
-          echo "TOTAL_POSTS=$TOTAL_POSTS"
-          echo "TOTAL_REPLIES=$TOTAL_REPLIES"
-          echo "TOTAL_DISCUSSIONS=$TOTAL_DISCUSSIONS"
-          echo "LANG1_LINE=$LANG1_LINE"
-          echo "LANG2_LINE=$LANG2_LINE"
-          echo "LANG3_LINE=$LANG3_LINE"
-          echo "LANG4_LINE=$LANG4_LINE"
+          echo "SWIFT_STARS=$SWIFT_STARS CUSTOMPAGES_STARS=$CUSTOMPAGES_STARS POSTER_STARS=$POSTER_STARS"
+          echo "SYNC_STARS=$SYNC_STARS USERMGMT_STARS=$USERMGMT_STARS YOUTUBE_STARS=$YOUTUBE_STARS"
+          echo "TOTAL_COMMITS=$TOTAL_COMMITS YEAR_COMMITS=$YEAR_COMMITS CURRENT_YEAR=$CURRENT_YEAR"
+          echo "BEST_STREAK=$BEST_STREAK CURRENT_STREAK=$CURRENT_STREAK"
+          echo "TOTAL_POSTS=$TOTAL_POSTS TOTAL_REPLIES=$TOTAL_REPLIES TOTAL_DISCUSSIONS=$TOTAL_DISCUSSIONS"
+          echo "LANG1_LINE=$LANG1_LINE LANG2_LINE=$LANG2_LINE LANG3_LINE=$LANG3_LINE LANG4_LINE=$LANG4_LINE"
 
           # Set defaults if empty
           TOTAL_COMMITS=${TOTAL_COMMITS:-0}
@@ -70,197 +71,145 @@ jobs:
 
           # Read history for fallback and delta computation
           if [ -f stats-history.json ]; then
-            PREV_DATA=$(jq '.[0]' stats-history.json)
-            OLD_DATA=$(jq '.[-1]' stats-history.json)
+            PREV_DATA=$(jq '.[0] // {}' stats-history.json)
+            OLD_DATA=$(jq '.[-1] // {}' stats-history.json)
           else
             PREV_DATA="{}"
             OLD_DATA="{}"
           fi
 
-          # Fallback: if API returned 0, use previous day's value
-          if [ "$SWIFT_STARS" -eq 0 ]; then
-            SWIFT_STARS=$(echo "$PREV_DATA" | jq -r '.swift_stars // 0')
-            if ! [[ "$SWIFT_STARS" =~ ^[0-9]+$ ]]; then SWIFT_STARS=0; fi
-            if [ "$SWIFT_STARS" -gt 1000 ]; then
-              SWIFT_STARS_FORMATTED="$(echo "scale=1; ($SWIFT_STARS+50)/1000" | bc)k"
-            else
-              SWIFT_STARS_FORMATTED="$SWIFT_STARS"
+          # Fallback: if a star count came back 0, reuse the previous day's value.
+          star_fallback() {
+            # $1 = current value, $2 = history key
+            local cur="$1" key="$2"
+            if [ "$cur" -eq 0 ]; then
+              cur=$(echo "$PREV_DATA" | jq -r --arg k "$key" '.[$k] // 0')
+              if ! [[ "$cur" =~ ^[0-9]+$ ]]; then cur=0; fi
             fi
-          fi
-          if [ "$PROXY_STARS" -eq 0 ]; then
-            PROXY_STARS=$(echo "$PREV_DATA" | jq -r '.proxy_stars // 0')
-            if ! [[ "$PROXY_STARS" =~ ^[0-9]+$ ]]; then PROXY_STARS=0; fi
-          fi
-          if [ "$POSTER_STARS" -eq 0 ]; then
-            POSTER_STARS=$(echo "$PREV_DATA" | jq -r '.poster_stars // 0')
-            if ! [[ "$POSTER_STARS" =~ ^[0-9]+$ ]]; then POSTER_STARS=0; fi
-          fi
-          if [ "$SYNC_STARS" -eq 0 ]; then
-            SYNC_STARS=$(echo "$PREV_DATA" | jq -r '.sync_stars // 0')
-            if ! [[ "$SYNC_STARS" =~ ^[0-9]+$ ]]; then SYNC_STARS=0; fi
-          fi
-          if [ "$TOTAL_COMMITS" -eq 0 ]; then
-            TOTAL_COMMITS=$(echo "$PREV_DATA" | jq -r '.total_commits // 0')
-          fi
-          if [ "$YEAR_COMMITS" -eq 0 ]; then
-            YEAR_COMMITS=$(echo "$PREV_DATA" | jq -r '.year_commits // 0')
-          fi
-          if [ "$BEST_STREAK" -eq 0 ]; then
-            BEST_STREAK=$(echo "$PREV_DATA" | jq -r '.best_streak // 0')
-          fi
-          if [ "$TOTAL_POSTS" -eq 0 ]; then
-            TOTAL_POSTS=$(echo "$PREV_DATA" | jq -r '.total_posts // 0')
-          fi
-          if [ "$TOTAL_REPLIES" -eq 0 ]; then
-            TOTAL_REPLIES=$(echo "$PREV_DATA" | jq -r '.total_replies // 0')
-          fi
-          if [ "$TOTAL_DISCUSSIONS" -eq 0 ]; then
-            TOTAL_DISCUSSIONS=$(echo "$PREV_DATA" | jq -r '.total_discussions // 0')
-          fi
+            echo "$cur"
+          }
+          SWIFT_STARS=$(star_fallback "$SWIFT_STARS" swift_stars)
+          CUSTOMPAGES_STARS=$(star_fallback "$CUSTOMPAGES_STARS" custompages_stars)
+          POSTER_STARS=$(star_fallback "$POSTER_STARS" poster_stars)
+          SYNC_STARS=$(star_fallback "$SYNC_STARS" sync_stars)
+          USERMGMT_STARS=$(star_fallback "$USERMGMT_STARS" usermgmt_stars)
+          YOUTUBE_STARS=$(star_fallback "$YOUTUBE_STARS" youtube_stars)
+          SWIFT_STARS_FORMATTED=$(format_k "$SWIFT_STARS")
 
-          # Monotonic: these stats should never decrease
+          # Fallback for activity stats if the API returned 0
+          if [ "$TOTAL_COMMITS" -eq 0 ]; then TOTAL_COMMITS=$(echo "$PREV_DATA" | jq -r '.total_commits // 0'); fi
+          if [ "$YEAR_COMMITS" -eq 0 ]; then YEAR_COMMITS=$(echo "$PREV_DATA" | jq -r '.year_commits // 0'); fi
+          if [ "$BEST_STREAK" -eq 0 ]; then BEST_STREAK=$(echo "$PREV_DATA" | jq -r '.best_streak // 0'); fi
+          if [ "$TOTAL_POSTS" -eq 0 ]; then TOTAL_POSTS=$(echo "$PREV_DATA" | jq -r '.total_posts // 0'); fi
+          if [ "$TOTAL_REPLIES" -eq 0 ]; then TOTAL_REPLIES=$(echo "$PREV_DATA" | jq -r '.total_replies // 0'); fi
+          if [ "$TOTAL_DISCUSSIONS" -eq 0 ]; then TOTAL_DISCUSSIONS=$(echo "$PREV_DATA" | jq -r '.total_discussions // 0'); fi
+
+          # Monotonic guard: all-time totals only ever grow, so never let a
+          # transient API hiccup drop them. NOTE: year_commits is intentionally
+          # excluded — it must reset to ~0 each January.
           PREV_COMMITS=$(echo "$PREV_DATA" | jq -r '.total_commits // 0')
-          PREV_YEAR=$(echo "$PREV_DATA" | jq -r '.year_commits // 0')
           PREV_POSTS=$(echo "$PREV_DATA" | jq -r '.total_posts // 0')
           PREV_REPLIES=$(echo "$PREV_DATA" | jq -r '.total_replies // 0')
           PREV_DISCUSSIONS=$(echo "$PREV_DATA" | jq -r '.total_discussions // 0')
           if [ "$TOTAL_COMMITS" -lt "$PREV_COMMITS" ]; then TOTAL_COMMITS=$PREV_COMMITS; fi
-          if [ "$YEAR_COMMITS" -lt "$PREV_YEAR" ]; then YEAR_COMMITS=$PREV_YEAR; fi
           if [ "$TOTAL_POSTS" -lt "$PREV_POSTS" ]; then TOTAL_POSTS=$PREV_POSTS; fi
           if [ "$TOTAL_REPLIES" -lt "$PREV_REPLIES" ]; then TOTAL_REPLIES=$PREV_REPLIES; fi
           if [ "$TOTAL_DISCUSSIONS" -lt "$PREV_DISCUSSIONS" ]; then TOTAL_DISCUSSIONS=$PREV_DISCUSSIONS; fi
 
-          # Parse top 3 languages from the lines (format: "44 Swift" or "22 C#")
-          # Use $1 for pct and everything after for name (handles multi-word names)
-          LANG1_PCT=$(echo "$LANG1_LINE" | awk '{print $1}')
-          LANG1_NAME=$(echo "$LANG1_LINE" | awk '{$1=""; print}' | sed 's/^ //')
-          LANG2_PCT=$(echo "$LANG2_LINE" | awk '{print $1}')
-          LANG2_NAME=$(echo "$LANG2_LINE" | awk '{$1=""; print}' | sed 's/^ //')
-          LANG3_PCT=$(echo "$LANG3_LINE" | awk '{print $1}')
-          LANG3_NAME=$(echo "$LANG3_LINE" | awk '{$1=""; print}' | sed 's/^ //')
-          LANG4_PCT=$(echo "$LANG4_LINE" | awk '{print $1}')
-          LANG4_NAME=$(echo "$LANG4_LINE" | awk '{$1=""; print}' | sed 's/^ //')
+          # Parse top 4 languages (format: "44 Swift" or "22 C#")
+          parse_lang_name() { echo "$1" | awk '{$1=""; print}' | sed 's/^ //'; }
+          parse_lang_pct()  { echo "$1" | awk '{print $1}'; }
+          LANG1_PCT=$(parse_lang_pct "$LANG1_LINE"); LANG1_NAME=$(parse_lang_name "$LANG1_LINE")
+          LANG2_PCT=$(parse_lang_pct "$LANG2_LINE"); LANG2_NAME=$(parse_lang_name "$LANG2_LINE")
+          LANG3_PCT=$(parse_lang_pct "$LANG3_LINE"); LANG3_NAME=$(parse_lang_name "$LANG3_LINE")
+          LANG4_PCT=$(parse_lang_pct "$LANG4_LINE"); LANG4_NAME=$(parse_lang_name "$LANG4_LINE")
 
-          # Set defaults for languages
-          LANG1_NAME=${LANG1_NAME:-"Unknown"}
-          LANG1_PCT=${LANG1_PCT:-0}
-          LANG2_NAME=${LANG2_NAME:-"Unknown"}
-          LANG2_PCT=${LANG2_PCT:-0}
-          LANG3_NAME=${LANG3_NAME:-"Unknown"}
-          LANG3_PCT=${LANG3_PCT:-0}
-          LANG4_NAME=${LANG4_NAME:-"Unknown"}
-          LANG4_PCT=${LANG4_PCT:-0}
+          LANG1_NAME=${LANG1_NAME:-"Unknown"}; LANG1_PCT=${LANG1_PCT:-0}
+          LANG2_NAME=${LANG2_NAME:-"Unknown"}; LANG2_PCT=${LANG2_PCT:-0}
+          LANG3_NAME=${LANG3_NAME:-"Unknown"}; LANG3_PCT=${LANG3_PCT:-0}
+          LANG4_NAME=${LANG4_NAME:-"Unknown"}; LANG4_PCT=${LANG4_PCT:-0}
 
           echo "LANG1: $LANG1_NAME ($LANG1_PCT%)"
           echo "LANG2: $LANG2_NAME ($LANG2_PCT%)"
           echo "LANG3: $LANG3_NAME ($LANG3_PCT%)"
           echo "LANG4: $LANG4_NAME ($LANG4_PCT%)"
 
-          # Calculate bar widths (out of 320px max width)
+          # Bar widths (out of 320px max)
           LANG1_WIDTH=$((LANG1_PCT * 320 / 100))
           LANG2_WIDTH=$((LANG2_PCT * 320 / 100))
           LANG3_WIDTH=$((LANG3_PCT * 320 / 100))
           LANG4_WIDTH=$((LANG4_PCT * 320 / 100))
 
-          # Get language colors
-          case "$LANG1_NAME" in
-            Swift) LANG1_COLOR="#F05138" ;;
-            Go) LANG1_COLOR="#00ADD8" ;;
-            "C#") LANG1_COLOR="#512BD4" ;;
-            Python) LANG1_COLOR="#3776AB" ;;
-            JavaScript) LANG1_COLOR="#F7DF1E" ;;
-            TypeScript) LANG1_COLOR="#3178C6" ;;
-            *) LANG1_COLOR="#8B949E" ;;
-          esac
+          # Language colors
+          lang_color() {
+            case "$1" in
+              Swift) echo "#F05138" ;;
+              Go) echo "#00ADD8" ;;
+              "C#") echo "#512BD4" ;;
+              Python) echo "#3776AB" ;;
+              JavaScript) echo "#F7DF1E" ;;
+              TypeScript) echo "#3178C6" ;;
+              *) echo "#8B949E" ;;
+            esac
+          }
+          LANG1_COLOR=$(lang_color "$LANG1_NAME")
+          LANG2_COLOR=$(lang_color "$LANG2_NAME")
+          LANG3_COLOR=$(lang_color "$LANG3_NAME")
+          LANG4_COLOR=$(lang_color "$LANG4_NAME")
 
-          case "$LANG2_NAME" in
-            Swift) LANG2_COLOR="#F05138" ;;
-            Go) LANG2_COLOR="#00ADD8" ;;
-            "C#") LANG2_COLOR="#512BD4" ;;
-            Python) LANG2_COLOR="#3776AB" ;;
-            JavaScript) LANG2_COLOR="#F7DF1E" ;;
-            TypeScript) LANG2_COLOR="#3178C6" ;;
-            *) LANG2_COLOR="#8B949E" ;;
-          esac
-
-          case "$LANG3_NAME" in
-            Swift) LANG3_COLOR="#F05138" ;;
-            Go) LANG3_COLOR="#00ADD8" ;;
-            "C#") LANG3_COLOR="#512BD4" ;;
-            Python) LANG3_COLOR="#3776AB" ;;
-            JavaScript) LANG3_COLOR="#F7DF1E" ;;
-            TypeScript) LANG3_COLOR="#3178C6" ;;
-            *) LANG3_COLOR="#8B949E" ;;
-          esac
-
-          case "$LANG4_NAME" in
-            Swift) LANG4_COLOR="#F05138" ;;
-            Go) LANG4_COLOR="#00ADD8" ;;
-            "C#") LANG4_COLOR="#512BD4" ;;
-            Python) LANG4_COLOR="#3776AB" ;;
-            JavaScript) LANG4_COLOR="#F7DF1E" ;;
-            TypeScript) LANG4_COLOR="#3178C6" ;;
-            *) LANG4_COLOR="#8B949E" ;;
-          esac
-
-          # Compute deltas (current vs 7 days ago)
+          # Deltas (current vs ~7 days ago)
           format_delta() {
-            local val=$1
-            if [ "$val" -gt 0 ]; then echo "+${val}"
-            elif [ "$val" -lt 0 ]; then echo "${val}"
+            if [ "$1" -gt 0 ]; then echo "+$1"
+            elif [ "$1" -lt 0 ]; then echo "$1"
             else echo "--"
             fi
           }
           delta_color() {
-            local val=$1
-            if [ "$val" -gt 0 ]; then echo "#3fb950"
-            elif [ "$val" -lt 0 ]; then echo "#f85149"
+            if [ "$1" -gt 0 ]; then echo "#3fb950"
+            elif [ "$1" -lt 0 ]; then echo "#f85149"
             else echo "#8b949e"
             fi
           }
 
           OLD_SWIFT=$(echo "$OLD_DATA" | jq -r '.swift_stars // 0')
-          OLD_PROXY=$(echo "$OLD_DATA" | jq -r '.proxy_stars // 0')
+          OLD_CUSTOMPAGES=$(echo "$OLD_DATA" | jq -r '.custompages_stars // 0')
           OLD_POSTER=$(echo "$OLD_DATA" | jq -r '.poster_stars // 0')
           OLD_SYNC=$(echo "$OLD_DATA" | jq -r '.sync_stars // 0')
+          OLD_USERMGMT=$(echo "$OLD_DATA" | jq -r '.usermgmt_stars // 0')
+          OLD_YOUTUBE=$(echo "$OLD_DATA" | jq -r '.youtube_stars // 0')
           OLD_COMMITS=$(echo "$OLD_DATA" | jq -r '.total_commits // 0')
           OLD_YEAR=$(echo "$OLD_DATA" | jq -r '.year_commits // 0')
           OLD_DISCUSSIONS=$(echo "$OLD_DATA" | jq -r '.total_discussions // 0')
 
-          D_SWIFT=$((SWIFT_STARS - OLD_SWIFT))
-          D_PROXY=$((PROXY_STARS - OLD_PROXY))
-          D_POSTER=$((POSTER_STARS - OLD_POSTER))
-          D_SYNC=$((SYNC_STARS - OLD_SYNC))
-          D_COMMITS=$((TOTAL_COMMITS - OLD_COMMITS))
-          D_YEAR=$((YEAR_COMMITS - OLD_YEAR))
-          D_DISCUSSIONS=$((TOTAL_DISCUSSIONS - OLD_DISCUSSIONS))
+          SWIFT_DELTA=$(format_delta $((SWIFT_STARS - OLD_SWIFT)))
+          CUSTOMPAGES_DELTA=$(format_delta $((CUSTOMPAGES_STARS - OLD_CUSTOMPAGES)))
+          POSTER_DELTA=$(format_delta $((POSTER_STARS - OLD_POSTER)))
+          SYNC_DELTA=$(format_delta $((SYNC_STARS - OLD_SYNC)))
+          USERMGMT_DELTA=$(format_delta $((USERMGMT_STARS - OLD_USERMGMT)))
+          YOUTUBE_DELTA=$(format_delta $((YOUTUBE_STARS - OLD_YOUTUBE)))
+          COMMITS_DELTA=$(format_delta $((TOTAL_COMMITS - OLD_COMMITS)))
+          YEAR_DELTA=$(format_delta $((YEAR_COMMITS - OLD_YEAR)))
+          DISCUSSIONS_DELTA=$(format_delta $((TOTAL_DISCUSSIONS - OLD_DISCUSSIONS)))
 
-          SWIFT_DELTA=$(format_delta $D_SWIFT)
-          PROXY_DELTA=$(format_delta $D_PROXY)
-          POSTER_DELTA=$(format_delta $D_POSTER)
-          SYNC_DELTA=$(format_delta $D_SYNC)
-          COMMITS_DELTA=$(format_delta $D_COMMITS)
-          YEAR_DELTA=$(format_delta $D_YEAR)
-          DISCUSSIONS_DELTA=$(format_delta $D_DISCUSSIONS)
+          SWIFT_DELTA_COLOR=$(delta_color $((SWIFT_STARS - OLD_SWIFT)))
+          CUSTOMPAGES_DELTA_COLOR=$(delta_color $((CUSTOMPAGES_STARS - OLD_CUSTOMPAGES)))
+          POSTER_DELTA_COLOR=$(delta_color $((POSTER_STARS - OLD_POSTER)))
+          SYNC_DELTA_COLOR=$(delta_color $((SYNC_STARS - OLD_SYNC)))
+          USERMGMT_DELTA_COLOR=$(delta_color $((USERMGMT_STARS - OLD_USERMGMT)))
+          YOUTUBE_DELTA_COLOR=$(delta_color $((YOUTUBE_STARS - OLD_YOUTUBE)))
+          COMMITS_DELTA_COLOR=$(delta_color $((TOTAL_COMMITS - OLD_COMMITS)))
+          YEAR_DELTA_COLOR=$(delta_color $((YEAR_COMMITS - OLD_YEAR)))
+          DISCUSSIONS_DELTA_COLOR=$(delta_color $((TOTAL_DISCUSSIONS - OLD_DISCUSSIONS)))
 
-          SWIFT_DELTA_COLOR=$(delta_color $D_SWIFT)
-          PROXY_DELTA_COLOR=$(delta_color $D_PROXY)
-          POSTER_DELTA_COLOR=$(delta_color $D_POSTER)
-          SYNC_DELTA_COLOR=$(delta_color $D_SYNC)
-          COMMITS_DELTA_COLOR=$(delta_color $D_COMMITS)
-          YEAR_DELTA_COLOR=$(delta_color $D_YEAR)
-          DISCUSSIONS_DELTA_COLOR=$(delta_color $D_DISCUSSIONS)
-
-          echo "Deltas: swift=$SWIFT_DELTA proxy=$PROXY_DELTA poster=$POSTER_DELTA sync=$SYNC_DELTA"
-          echo "Deltas: commits=$COMMITS_DELTA year=$YEAR_DELTA discussions=$DISCUSSIONS_DELTA"
-
-          # Update stats history JSON
+          # Update stats history JSON (keep last 7 days)
           TODAY=$(date +%Y-%m-%d)
           jq --arg date "$TODAY" \
              --argjson swift "$SWIFT_STARS" \
-             --argjson proxy "$PROXY_STARS" \
+             --argjson custompages "$CUSTOMPAGES_STARS" \
              --argjson poster "$POSTER_STARS" \
              --argjson sync "$SYNC_STARS" \
+             --argjson usermgmt "$USERMGMT_STARS" \
+             --argjson youtube "$YOUTUBE_STARS" \
              --argjson commits "$TOTAL_COMMITS" \
              --argjson year "$YEAR_COMMITS" \
              --argjson streak "$BEST_STREAK" \
@@ -274,9 +223,11 @@ jobs:
              '[{
                date: $date,
                swift_stars: $swift,
-               proxy_stars: $proxy,
+               custompages_stars: $custompages,
                poster_stars: $poster,
                sync_stars: $sync,
+               usermgmt_stars: $usermgmt,
+               youtube_stars: $youtube,
                total_commits: $commits,
                year_commits: $year,
                best_streak: $streak,
@@ -294,9 +245,11 @@ jobs:
           cp profile-summary-template.svg profile-summary.svg
 
           sed -i "s|SWIFT_STARS_FORMATTED|$SWIFT_STARS_FORMATTED|g" profile-summary.svg
-          sed -i "s|PROXY_STARS|$PROXY_STARS|g" profile-summary.svg
+          sed -i "s|CUSTOMPAGES_STARS|$CUSTOMPAGES_STARS|g" profile-summary.svg
           sed -i "s|POSTER_STARS|$POSTER_STARS|g" profile-summary.svg
           sed -i "s|SYNC_STARS|$SYNC_STARS|g" profile-summary.svg
+          sed -i "s|USERMGMT_STARS|$USERMGMT_STARS|g" profile-summary.svg
+          sed -i "s|YOUTUBE_STARS|$YOUTUBE_STARS|g" profile-summary.svg
           sed -i "s|UPDATED|$UPDATED|g" profile-summary.svg
           sed -i "s|TOTAL_COMMITS|$TOTAL_COMMITS|g" profile-summary.svg
           sed -i "s|YEAR_COMMITS|$YEAR_COMMITS|g" profile-summary.svg
@@ -323,12 +276,16 @@ jobs:
           # Delta substitutions (color first to avoid partial matches)
           sed -i "s|SWIFT_DELTA_COLOR|$SWIFT_DELTA_COLOR|g" profile-summary.svg
           sed -i "s|SWIFT_DELTA|$SWIFT_DELTA|g" profile-summary.svg
-          sed -i "s|PROXY_DELTA_COLOR|$PROXY_DELTA_COLOR|g" profile-summary.svg
-          sed -i "s|PROXY_DELTA|$PROXY_DELTA|g" profile-summary.svg
+          sed -i "s|CUSTOMPAGES_DELTA_COLOR|$CUSTOMPAGES_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|CUSTOMPAGES_DELTA|$CUSTOMPAGES_DELTA|g" profile-summary.svg
           sed -i "s|POSTER_DELTA_COLOR|$POSTER_DELTA_COLOR|g" profile-summary.svg
           sed -i "s|POSTER_DELTA|$POSTER_DELTA|g" profile-summary.svg
           sed -i "s|SYNC_DELTA_COLOR|$SYNC_DELTA_COLOR|g" profile-summary.svg
           sed -i "s|SYNC_DELTA|$SYNC_DELTA|g" profile-summary.svg
+          sed -i "s|USERMGMT_DELTA_COLOR|$USERMGMT_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|USERMGMT_DELTA|$USERMGMT_DELTA|g" profile-summary.svg
+          sed -i "s|YOUTUBE_DELTA_COLOR|$YOUTUBE_DELTA_COLOR|g" profile-summary.svg
+          sed -i "s|YOUTUBE_DELTA|$YOUTUBE_DELTA|g" profile-summary.svg
           sed -i "s|COMMITS_DELTA_COLOR|$COMMITS_DELTA_COLOR|g" profile-summary.svg
           sed -i "s|COMMITS_DELTA|$COMMITS_DELTA|g" profile-summary.svg
           sed -i "s|YEAR_DELTA_COLOR|$YEAR_DELTA_COLOR|g" profile-summary.svg
