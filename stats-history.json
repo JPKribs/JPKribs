@@ -1,1 +1,33 @@
-[]
+[
+  {
+    "date": "2026-06-05",
+    "swift_stars": 3918,
+    "custompages_stars": 0,
+    "poster_stars": 7,
+    "sync_stars": 5,
+    "usermgmt_stars": 0,
+    "youtube_stars": 2,
+    "total_commits": 940,
+    "year_commits": 609,
+    "best_streak": 17,
+    "total_posts": 88,
+    "total_replies": 415,
+    "total_discussions": 275,
+    "lang1": {
+      "name": "Swift",
+      "pct": 75
+    },
+    "lang2": {
+      "name": "C#",
+      "pct": 13
+    },
+    "lang3": {
+      "name": "JavaScript",
+      "pct": 3
+    },
+    "lang4": {
+      "name": "MDX",
+      "pct": 2
+    }
+  }
+]
