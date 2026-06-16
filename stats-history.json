@@ -1,5 +1,36 @@
 [
   {
+    "date": "2026-06-16",
+    "swift_stars": 3945,
+    "custompages_stars": 0,
+    "poster_stars": 7,
+    "sync_stars": 5,
+    "usermgmt_stars": 0,
+    "youtube_stars": 2,
+    "total_commits": 1108,
+    "year_commits": 695,
+    "best_streak": 17,
+    "total_posts": 92,
+    "total_replies": 423,
+    "total_discussions": 277,
+    "lang1": {
+      "name": "Swift",
+      "pct": 71
+    },
+    "lang2": {
+      "name": "C#",
+      "pct": 17
+    },
+    "lang3": {
+      "name": "JavaScript",
+      "pct": 3
+    },
+    "lang4": {
+      "name": "MDX",
+      "pct": 2
+    }
+  },
+  {
     "date": "2026-06-15",
     "swift_stars": 3939,
     "custompages_stars": 0,
@@ -167,37 +198,6 @@
     "best_streak": 17,
     "total_posts": 92,
     "total_replies": 418,
-    "total_discussions": 276,
-    "lang1": {
-      "name": "Swift",
-      "pct": 71
-    },
-    "lang2": {
-      "name": "C#",
-      "pct": 17
-    },
-    "lang3": {
-      "name": "JavaScript",
-      "pct": 3
-    },
-    "lang4": {
-      "name": "MDX",
-      "pct": 2
-    }
-  },
-  {
-    "date": "2026-06-09",
-    "swift_stars": 3931,
-    "custompages_stars": 0,
-    "poster_stars": 7,
-    "sync_stars": 5,
-    "usermgmt_stars": 0,
-    "youtube_stars": 2,
-    "total_commits": 1108,
-    "year_commits": 674,
-    "best_streak": 17,
-    "total_posts": 92,
-    "total_replies": 417,
     "total_discussions": 276,
     "lang1": {
       "name": "Swift",
