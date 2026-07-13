@@ -10,8 +10,14 @@
 # double/triple-counted any commit that also lived in a fork (Swiftfin,
 # jellyfin-sdk-swift, jellyfin.org) and silently undercounted org work.
 #
-# Pull requests / issues / comments still use the cross-repo search API, and
-# language bytes still come from the REST languages endpoint.
+# Pull requests / issues / comments still use the cross-repo search API.
+#
+# Languages are commit-weighted: each repository the user has commit
+# contributions in (per GraphQL commitContributionsByRepository, which covers
+# org repos like jellyfin/Swiftfin) contributes its language byte mix scaled
+# by the user's commit count there. Summing raw bytes across repos — the old
+# approach — counted entire codebases of forks (all of Swiftfin's Swift, the
+# jellyfin.org site's MDX) as the user's own languages.
 
 USERNAME="JPKribs"
 GITHUB_API="https://api.github.com"
@@ -41,7 +47,7 @@ gql_contrib() {
   local from="$1" to="$2"
   curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" \
     -X POST "${GRAPHQL_API}" \
-    -d "{\"query\":\"query(\$login:String!,\$from:DateTime!,\$to:DateTime!){user(login:\$login){contributionsCollection(from:\$from,to:\$to){totalCommitContributions contributionCalendar{weeks{contributionDays{date contributionCount}}}}}}\",\"variables\":{\"login\":\"${USERNAME}\",\"from\":\"${from}\",\"to\":\"${to}\"}}"
+    -d "{\"query\":\"query(\$login:String!,\$from:DateTime!,\$to:DateTime!){user(login:\$login){contributionsCollection(from:\$from,to:\$to){totalCommitContributions contributionCalendar{weeks{contributionDays{date contributionCount}}} commitContributionsByRepository(maxRepositories:100){repository{nameWithOwner} contributions{totalCount}}}}}\",\"variables\":{\"login\":\"${USERNAME}\",\"from\":\"${from}\",\"to\":\"${to}\"}}"
 }
 
 echo "Resolving account creation date..." >&2
@@ -54,6 +60,7 @@ fi
 TOTAL_COMMITS=0
 YEAR_COMMITS=0
 DAYS_FILE=$(mktemp)
+REPO_COMMITS_FILE=$(mktemp)
 
 echo "Fetching contribution data ${START_YEAR}..${CURRENT_YEAR}..." >&2
 for (( Y=START_YEAR; Y<=CURRENT_YEAR; Y++ )); do
@@ -76,6 +83,9 @@ for (( Y=START_YEAR; Y<=CURRENT_YEAR; Y++ )); do
 
   # Append "date count" rows for streak computation.
   echo "$RESP" | jq -r '.data.user.contributionsCollection.contributionCalendar.weeks[]?.contributionDays[]? | "\(.date) \(.contributionCount)"' 2>/dev/null >> "$DAYS_FILE"
+
+  # Append "count repo" rows for commit-weighted language stats.
+  echo "$RESP" | jq -r '.data.user.contributionsCollection.commitContributionsByRepository[]? | "\(.contributions.totalCount) \(.repository.nameWithOwner)"' 2>/dev/null >> "$REPO_COMMITS_FILE"
 done
 
 # Longest run of consecutive active days (best streak), plus the run that ends
@@ -112,43 +122,55 @@ fi
 rm -f "$DAYS_FILE"
 
 # ---------------------------------------------------------------------------
-# Language bytes via REST (top 4 by total bytes across repos)
+# Commit-weighted languages (top 4)
+#
+# score(lang) = Σ over repos: (user's commits in repo) × (repo's byte share
+# of lang). A repo the user rarely touches contributes little, no matter how
+# large its codebase is.
 # ---------------------------------------------------------------------------
 
-declare -A LANGUAGE_BYTES
+# Sum per-year commit counts into one "commits repo" row per repository.
+REPO_TOTALS=$(awk '{c[$2]+=$1} END {for (r in c) print c[r], r}' "$REPO_COMMITS_FILE" | sort -rn)
+rm -f "$REPO_COMMITS_FILE"
 
-echo "Fetching repositories for language stats..." >&2
-REPOS=$(curl -s -H "Authorization: Bearer ${TOKEN}" \
-  "${GITHUB_API}/users/${USERNAME}/repos?per_page=100&type=all" | \
-  jq -r '.[].full_name')
+LANG_SCORES_FILE=$(mktemp)
 
-for repo in $REPOS; do
-  REPO_LANGS=$(curl -s -H "Authorization: Bearer ${TOKEN}" \
-    "${GITHUB_API}/repos/${repo}/languages" 2>/dev/null)
-
-  if [ -n "$REPO_LANGS" ] && [ "$REPO_LANGS" != "null" ]; then
-    for lang in $(echo "$REPO_LANGS" | jq -r 'keys[]' 2>/dev/null); do
-      bytes=$(echo "$REPO_LANGS" | jq -r --arg l "$lang" '.[$l] // 0' 2>/dev/null)
-      if [[ "$bytes" =~ ^[0-9]+$ ]]; then
-        LANGUAGE_BYTES[$lang]=$((${LANGUAGE_BYTES[$lang]:-0} + bytes))
-      fi
-    done
-  fi
-done
-
-TOTAL_BYTES=0
-for lang in "${!LANGUAGE_BYTES[@]}"; do
-  TOTAL_BYTES=$((TOTAL_BYTES + ${LANGUAGE_BYTES[$lang]}))
-done
-if [ "$TOTAL_BYTES" -eq 0 ]; then
-  TOTAL_BYTES=1
+if [ -n "$REPO_TOTALS" ]; then
+  echo "Computing commit-weighted language stats..." >&2
+  while read -r commits repo; do
+    [ -z "$repo" ] && continue
+    REPO_LANGS=$(curl -s -H "Authorization: Bearer ${TOKEN}" \
+      "${GITHUB_API}/repos/${repo}/languages" 2>/dev/null)
+    # Emit "lang<TAB>weighted-score" rows; skip repos that 404 or are empty
+    # (error bodies like {"message":"Not Found"} carry no numeric values).
+    echo "$REPO_LANGS" | jq -r --argjson c "$commits" \
+      'select(type == "object") | [to_entries[] | select(.value | type == "number")] | (map(.value) | add // 0) as $t | select($t > 0) | .[] | "\(.key)\t\($c * .value / $t)"' \
+      2>/dev/null >> "$LANG_SCORES_FILE"
+    echo "  $repo: $commits commits" >&2
+  done <<< "$REPO_TOTALS"
+else
+  # GraphQL gave us nothing — fall back to raw bytes across the user's own
+  # non-fork repos (forks would count whole upstream codebases as the user's).
+  echo "No contribution data; falling back to byte counts of non-fork repos..." >&2
+  REPOS=$(curl -s -H "Authorization: Bearer ${TOKEN}" \
+    "${GITHUB_API}/users/${USERNAME}/repos?per_page=100&type=owner" | \
+    jq -r '.[] | select(.fork == false) | .full_name')
+  for repo in $REPOS; do
+    curl -s -H "Authorization: Bearer ${TOKEN}" \
+      "${GITHUB_API}/repos/${repo}/languages" 2>/dev/null | \
+      jq -r 'select(type == "object") | to_entries[] | select(.value | type == "number") | "\(.key)\t\(.value)"' \
+      2>/dev/null >> "$LANG_SCORES_FILE"
+  done
 fi
 
-TOP_LANGS=$(for lang in "${!LANGUAGE_BYTES[@]}"; do
-  bytes=${LANGUAGE_BYTES[$lang]}
-  pct=$((bytes * 100 / TOTAL_BYTES))
-  echo "$pct $lang"
-done | sort -rn | head -4)
+# Aggregate scores, convert to rounded percentages, keep the top 4.
+TOP_LANGS=$(awk -F'\t' '
+  {score[$1] += $2; total += $2}
+  END {
+    if (total <= 0) exit
+    for (l in score) printf "%.6f\t%.0f %s\n", score[l], 100 * score[l] / total, l
+  }' "$LANG_SCORES_FILE" | sort -rn | head -4 | cut -f2-)
+rm -f "$LANG_SCORES_FILE"
 
 if [ -z "$TOP_LANGS" ]; then
   TOP_LANGS="0 Unknown"

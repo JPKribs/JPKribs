@@ -1,0 +1,6 @@
+<svg width="800" height="110" viewBox="0 0 800 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0.5" y="0.5" width="799" height="109" rx="12" fill="#0d1117" stroke="#30363d"/>
+  <text x="400" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#f0f6fc">Joe Kribs</text>
+  <text x="400" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#f0f6fc">Data Analytics Manager</text>
+  <text x="400" y="93" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#8b949e">Jellyfin Team Member • Swiftfin Co-Maintainer</text>
+</svg>
