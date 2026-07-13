@@ -22,7 +22,7 @@ if [ -n "$TOKEN" ]; then
   AUTH=(-H "Authorization: Bearer ${TOKEN}")
 fi
 
-# id | repo | display title | card width | right gutter.
+# id | repo | display title | description | card width | right gutter.
 #
 # The id doubles as the output filename and the stats-history.json key prefix
 # (<id>_stars) — existing ids must not change or delta history resets.
@@ -31,15 +31,20 @@ fi
 # each row's SVG widths (card + gutter) must sum to exactly 800 to line up
 # with the full-width cards. Row 1 is 3-up (3×260 + 2×10), row 2 is 4-up
 # (4×192.5 + 3×10). The gutter is transparent padding baked into the SVG;
-# the last card of each row has none.
+# the last card of each row has none. Every card template also carries a
+# 10px transparent bottom pad (footer excepted) so vertical gaps match the
+# horizontal ones exactly.
+# Descriptions must stay short enough for the narrow 4-up cards (~34 chars
+# at 10px) and must not contain "&" or "|" (sed/field delimiters).
+# Alphabetical by display title: row 1 gets the first 3, row 2 the rest.
 PLUGINS=(
-  "poster|JPKribs/jellyfin-plugin-episodepostergenerator|Poster Generator|260|10"
-  "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|260|10"
-  "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|260|0"
-  "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|192.5|10"
-  "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|192.5|10"
-  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|192.5|10"
-  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|192.5|0"
+  "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages|260|10"
+  "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager|260|10"
+  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Simple Live TV from Libraries|260|0"
+  "poster|JPKribs/jellyfin-plugin-episodepostergenerator|Poster Generator|Custom Styling for Episode Posters|192.5|10"
+  "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers|192.5|10"
+  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Manage Users via Groups|192.5|10"
+  "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio|192.5|0"
 )
 
 fetch_stars() {
@@ -123,7 +128,7 @@ sed -e "s|SWIFT_STARS_FORMATTED|$(format_k "$SWIFT_STARS")|g" \
 # ---------------------------------------------------------------------------
 
 for entry in "${PLUGINS[@]}"; do
-  IFS='|' read -r id repo title width gutter <<< "$entry"
+  IFS='|' read -r id repo title desc width gutter <<< "$entry"
   echo "Fetching stars for $repo..." >&2
   stars=$(fetch_stars "$repo")
   stars=$(star_fallback "$stars" "${id}_stars")
@@ -141,6 +146,7 @@ for entry in "${PLUGINS[@]}"; do
       -e "s|CENTER|$center|g" \
       -e "s|LOGO_X|$logo_x|g" \
       -e "s|PLUGIN_TITLE|$title|g" \
+      -e "s|PLUGIN_DESC|$desc|g" \
       -e "s|PLUGIN_STARS|$stars|g" \
       -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
       -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
