@@ -28,30 +28,31 @@ if [ -n "$TOKEN" ]; then
   AUTH=(-H "Authorization: Bearer ${TOKEN}")
 fi
 
-# id | repo | display title | description | card width | right gutter.
+# id | repo | display title | description.
 #
 # The id doubles as the output filename and the stats-history.json key prefix
 # (<id>_stars) — existing ids must not change or delta history resets.
 #
-# Layout: the README butts the row's images together with NO whitespace, so
-# each row's SVG widths (card + gutter) must sum to exactly 800 to line up
-# with the full-width cards. Row 1 is 3-up (3×260 + 2×10), row 2 is 4-up
-# (4×192.5 + 3×10). The gutter is transparent padding baked into the SVG;
-# the last card of each row has none. Every card template also carries a
-# 10px transparent bottom pad (footer excepted) so vertical gaps match the
-# horizontal ones exactly.
-# Descriptions must stay short enough for the narrow 4-up cards (~34 chars
-# at 10px) and must not contain "|" (the field delimiter). Plain "&" is fine
+# Layout: every desktop plugin card is a uniform 202.5px SVG — a 192.5px
+# visible card with a 5px transparent gutter baked into EACH side, so cards
+# wrap like a centered flex row at any container width: 4 per row when
+# there's room (4×202.5 = 810, visible span exactly 800 to match the
+# full-width cards), then 3/2/1 as it narrows. The README puts all of them
+# in ONE centered <div> with no whitespace between images. Every card
+# template also carries a 10px transparent bottom pad (footer excepted) so
+# vertical gaps match the horizontal ones exactly.
+# Descriptions must stay short enough for the 192.5px cards (~34 chars at
+# 10px) and must not contain "|" (the field delimiter). Plain "&" is fine
 # — titles/descriptions are XML- and sed-escaped before substitution.
-# Alphabetical by display title: row 1 gets the first 3, row 2 the rest.
+# Ordered alphabetically by display title.
 PLUGINS=(
-  "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages|260|10"
-  "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager|260|10"
-  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries|260|0"
-  "poster|JPKribs/jellyfin-plugin-episodepostergenerator|Poster Generator|Custom Styling for Episode Posters|192.5|10"
-  "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers|192.5|10"
-  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites|192.5|10"
-  "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio|192.5|0"
+  "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages"
+  "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager"
+  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries"
+  "poster|JPKribs/jellyfin-plugin-episodepostergenerator|Poster Generator|Custom Styling for Episode Posters"
+  "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers"
+  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites"
+  "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio"
 )
 
 # Escape free text for substitution into the SVG templates: XML-encode
@@ -145,37 +146,21 @@ done
 # ---------------------------------------------------------------------------
 
 for entry in "${PLUGINS[@]}"; do
-  IFS='|' read -r id repo title desc width gutter <<< "$entry"
+  IFS='|' read -r id repo title desc <<< "$entry"
   echo "Fetching stars for $repo..." >&2
   stars=$(fetch_stars "$repo")
   stars=$(star_fallback "$stars" "${id}_stars")
   diff=$((stars - $(hist_old "${id}_stars")))
   entry_set "${id}_stars" "$stars"
 
-  # Geometry from card width: total SVG width includes the transparent
-  # gutter; contents center on the visible card, whose rect is inset 0.75
-  # for the 1.5 stroke; the 59.3-wide logo is centered.
-  read -r svg_w rect_w center logo_x <<< "$(awk -v w="$width" -v g="$gutter" \
-    'BEGIN{printf "%g %g %g %g", w+g, w-1.5, w/2, w/2-29.65}')"
-
-  sed -e "s|SVG_W|$svg_w|g" \
-      -e "s|RECT_W|$rect_w|g" \
-      -e "s|CENTER|$center|g" \
-      -e "s|LOGO_X|$logo_x|g" \
-      -e "s|PLUGIN_TITLE|$(esc "$title")|g" \
-      -e "s|PLUGIN_DESC|$(esc "$desc")|g" \
-      -e "s|PLUGIN_STARS|$stars|g" \
-      -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
-      -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
-      "$TEMPLATES/plugin-card.svg" > "$OUT/$id.svg"
-
-  # Mobile variant: fixed 800px-wide layout, no geometry substitution needed.
-  sed -e "s|PLUGIN_TITLE|$(esc "$title")|g" \
-      -e "s|PLUGIN_DESC|$(esc "$desc")|g" \
-      -e "s|PLUGIN_STARS|$stars|g" \
-      -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
-      -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
-      "$TEMPLATES/plugin-card-mobile.svg" > "$OUT/$id-mobile.svg"
+  for variant in "" "-mobile"; do
+    sed -e "s|PLUGIN_TITLE|$(esc "$title")|g" \
+        -e "s|PLUGIN_DESC|$(esc "$desc")|g" \
+        -e "s|PLUGIN_STARS|$stars|g" \
+        -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
+        -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
+        "$TEMPLATES/plugin-card$variant.svg" > "$OUT/$id$variant.svg"
+  done
 done
 
 # ---------------------------------------------------------------------------
