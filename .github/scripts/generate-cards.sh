@@ -35,17 +35,26 @@ fi
 # 10px transparent bottom pad (footer excepted) so vertical gaps match the
 # horizontal ones exactly.
 # Descriptions must stay short enough for the narrow 4-up cards (~34 chars
-# at 10px) and must not contain "&" or "|" (sed/field delimiters).
+# at 10px) and must not contain "|" (the field delimiter). Plain "&" is fine
+# — titles/descriptions are XML- and sed-escaped before substitution.
 # Alphabetical by display title: row 1 gets the first 3, row 2 the rest.
 PLUGINS=(
   "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages|260|10"
   "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager|260|10"
-  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Simple Live TV from Libraries|260|0"
+  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries|260|0"
   "poster|JPKribs/jellyfin-plugin-episodepostergenerator|Poster Generator|Custom Styling for Episode Posters|192.5|10"
   "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers|192.5|10"
-  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Manage Users via Groups|192.5|10"
+  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites|192.5|10"
   "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio|192.5|0"
 )
+
+# Escape free text for substitution into the SVG templates: XML-encode
+# (& < >), then backslash-escape sed replacement metacharacters (\ and &).
+esc() {
+  printf '%s' "$1" | \
+    sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g' | \
+    sed -e 's/[\\&]/\\&/g'
+}
 
 fetch_stars() {
   local s
@@ -145,8 +154,8 @@ for entry in "${PLUGINS[@]}"; do
       -e "s|RECT_W|$rect_w|g" \
       -e "s|CENTER|$center|g" \
       -e "s|LOGO_X|$logo_x|g" \
-      -e "s|PLUGIN_TITLE|$title|g" \
-      -e "s|PLUGIN_DESC|$desc|g" \
+      -e "s|PLUGIN_TITLE|$(esc "$title")|g" \
+      -e "s|PLUGIN_DESC|$(esc "$desc")|g" \
       -e "s|PLUGIN_STARS|$stars|g" \
       -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
       -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
