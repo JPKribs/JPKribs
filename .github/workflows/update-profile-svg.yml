@@ -18,8 +18,6 @@ jobs:
       - name: Generate Profile Cards
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Optional: a classic PAT (read:user) to include private contributions.
-          STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
         run: bash .github/scripts/generate-cards.sh
 
       - name: Commit and Push

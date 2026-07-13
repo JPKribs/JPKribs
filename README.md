@@ -11,5 +11,5 @@
 <p align="center"><a href="https://github.com/JPKribs/jellyfin-plugin-custompages"><img src="cards/custompages.svg" alt="Custom Pages"></a><a href="https://github.com/JPKribs/jellyfin-plugin-ddns"><img src="cards/ddns.svg" alt="DDNS"></a><a href="https://github.com/JPKribs/jellyfin-plugin-livechannels"><img src="cards/livechannels.svg" alt="Live Channels"></a><a href="https://github.com/JPKribs/jellyfin-plugin-usermanagement"><img src="cards/usermgmt.svg" alt="User Management"></a></p>
 
 <p align="center">
-  <a href="https://github.com/JPKribs"><img src="cards/stats.svg" alt="Contributions and Languages" width="800"></a>
+  <a href="https://joseph.kribs.net"><img src="cards/footer.svg" alt="joseph.kribs.net • joseph@kribs.net • Littleton, CO" width="800"></a>
 </p>

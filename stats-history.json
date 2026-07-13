@@ -8,29 +8,7 @@
     "custompages_stars": 0,
     "ddns_stars": 0,
     "livechannels_stars": 0,
-    "usermgmt_stars": 0,
-    "total_commits": 1177,
-    "year_commits": 846,
-    "best_streak": 17,
-    "total_posts": 92,
-    "total_replies": 437,
-    "total_discussions": 281,
-    "lang1": {
-      "name": "Swift",
-      "pct": 66
-    },
-    "lang2": {
-      "name": "C#",
-      "pct": 21
-    },
-    "lang3": {
-      "name": "JavaScript",
-      "pct": 4
-    },
-    "lang4": {
-      "name": "MDX",
-      "pct": 2
-    }
+    "usermgmt_stars": 0
   },
   {
     "date": "2026-07-12",
