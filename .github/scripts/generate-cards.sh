@@ -8,9 +8,10 @@
 # per-repo links are only possible with per-repo images.
 #
 # Every dynamic card is rendered twice: the desktop layout and a full-width
-# 800px "-mobile" variant with larger type. The README picks between them
-# with <picture><source media="(max-width: ...)"> so narrow viewports get a
-# uniform stack of full-width cards instead of wrapped fixed-width rows.
+# "-mobile" variant with larger type. The README picks between them with
+# <picture><source media="(max-width: ...)"> so fluid/narrow viewports get a
+# stack of full-width cards instead of a fixed-width grid — see the README's
+# layout notes for the breakpoints and measured GitHub column widths.
 # (header-mobile.svg is static and lives directly in cards/, like header.svg.)
 #
 # Runs in CI with GITHUB_TOKEN. Also runs locally without a token: star
@@ -28,31 +29,35 @@ if [ -n "$TOKEN" ]; then
   AUTH=(-H "Authorization: Bearer ${TOKEN}")
 fi
 
-# id | repo | display title | description.
+# id | repo | display title | description | visible width | right gutter.
 #
 # The id doubles as the output filename and the stats-history.json key prefix
 # (<id>_stars) — existing ids must not change or delta history resets.
 #
-# Layout: every desktop plugin card is a uniform 202.5px SVG — a 192.5px
-# visible card with a 5px transparent gutter baked into EACH side, so cards
-# wrap like a centered flex row at any container width: 4 per row when
-# there's room (4×202.5 = 810, visible span exactly 800 to match the
-# full-width cards), then 3/2/1 as it narrows. The README puts all of them
-# in ONE centered <div> with no whitespace between images. Every card
+# Layout: the desktop grid only ever shows on github.com viewports ≥1280px,
+# where the profile README column is a FIXED 846px (measured Jul 2026; the
+# column is fluid below that, and the README swaps to full-width mobile
+# cards there — see the README's <picture> sources). Rows are therefore
+# static and sized to fill the column flush, flex-grow style:
+#   row 1: 4 cards × 203.75 visible + 3×10 gutters = 845
+#   row 2: 3 cards × 275    visible + 2×10 gutters = 845
+# (845, not 846, leaves 1px slack so subpixel rounding can never overflow
+# the column and wrap a card.) The gutter is transparent right-side padding
+# baked into the SVG; the last card of each row has none. Every card
 # template also carries a 10px transparent bottom pad (footer excepted) so
 # vertical gaps match the horizontal ones exactly.
-# Descriptions must stay short enough for the 192.5px cards (~34 chars at
-# 10px) and must not contain "|" (the field delimiter). Plain "&" is fine
+# Descriptions must stay short enough for the ~204px row-1 cards (~34 chars
+# at 10px) and must not contain "|" (the field delimiter). Plain "&" is fine
 # — titles/descriptions are XML- and sed-escaped before substitution.
-# Ordered alphabetically by display title.
+# Alphabetical by display title: row 1 gets the first 4, row 2 the rest.
 PLUGINS=(
-  "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages"
-  "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager"
-  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries"
-  "poster|JPKribs/jellyfin-plugin-episodepostergenerator|Poster Generator|Custom Styling for Episode Posters"
-  "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers"
-  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites"
-  "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio"
+  "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages|203.75|10"
+  "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager|203.75|10"
+  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries|203.75|10"
+  "poster|JPKribs/jellyfin-plugin-episodepostergenerator|Poster Generator|Custom Styling for Episode Posters|203.75|0"
+  "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers|275|10"
+  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites|275|10"
+  "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio|275|0"
 )
 
 # Escape free text for substitution into the SVG templates: XML-encode
@@ -146,21 +151,39 @@ done
 # ---------------------------------------------------------------------------
 
 for entry in "${PLUGINS[@]}"; do
-  IFS='|' read -r id repo title desc <<< "$entry"
+  IFS='|' read -r id repo title desc width gutter <<< "$entry"
   echo "Fetching stars for $repo..." >&2
   stars=$(fetch_stars "$repo")
   stars=$(star_fallback "$stars" "${id}_stars")
   diff=$((stars - $(hist_old "${id}_stars")))
   entry_set "${id}_stars" "$stars"
 
-  for variant in "" "-mobile"; do
-    sed -e "s|PLUGIN_TITLE|$(esc "$title")|g" \
-        -e "s|PLUGIN_DESC|$(esc "$desc")|g" \
-        -e "s|PLUGIN_STARS|$stars|g" \
-        -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
-        -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
-        "$TEMPLATES/plugin-card$variant.svg" > "$OUT/$id$variant.svg"
-  done
+  # Geometry from card width: total SVG width includes the transparent
+  # gutter; contents center on the visible card, whose rect is inset 0.75
+  # for the 1.5 stroke; the 59.3-wide logo is centered.
+  read -r svg_w rect_w center logo_x <<< "$(awk -v w="$width" -v g="$gutter" \
+    'BEGIN{printf "%g %g %g %g", w+g, w-1.5, w/2, w/2-29.65}')"
+
+  sed -e "s|SVG_W|$svg_w|g" \
+      -e "s|RECT_W|$rect_w|g" \
+      -e "s|CENTER|$center|g" \
+      -e "s|LOGO_X|$logo_x|g" \
+      -e "s|PLUGIN_TITLE|$(esc "$title")|g" \
+      -e "s|PLUGIN_DESC|$(esc "$desc")|g" \
+      -e "s|PLUGIN_STARS|$stars|g" \
+      -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
+      -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
+      "$TEMPLATES/plugin-card.svg" > "$OUT/$id.svg"
+
+  # Mobile variant: fixed full-width layout. Its intrinsic size is 1600px
+  # (2× the 800 viewBox) so it always exceeds the README column and
+  # max-width:100% scales it to fill exactly.
+  sed -e "s|PLUGIN_TITLE|$(esc "$title")|g" \
+      -e "s|PLUGIN_DESC|$(esc "$desc")|g" \
+      -e "s|PLUGIN_STARS|$stars|g" \
+      -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
+      -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
+      "$TEMPLATES/plugin-card-mobile.svg" > "$OUT/$id-mobile.svg"
 done
 
 # ---------------------------------------------------------------------------
