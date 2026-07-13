@@ -7,6 +7,12 @@
 # link — GitHub strips <a> elements inside SVGs rendered through <img>, so
 # per-repo links are only possible with per-repo images.
 #
+# Every dynamic card is rendered twice: the desktop layout and a full-width
+# 800px "-mobile" variant with larger type. The README picks between them
+# with <picture><source media="(max-width: ...)"> so narrow viewports get a
+# uniform stack of full-width cards instead of wrapped fixed-width rows.
+# (header-mobile.svg is static and lives directly in cards/, like header.svg.)
+#
 # Runs in CI with GITHUB_TOKEN. Also runs locally without a token: star
 # counts come from the unauthenticated API.
 
@@ -127,10 +133,12 @@ SWIFT_STARS=$(star_fallback "$SWIFT_STARS" swift_stars)
 SWIFT_DIFF=$((SWIFT_STARS - $(hist_old swift_stars)))
 entry_set swift_stars "$SWIFT_STARS"
 
-sed -e "s|SWIFT_STARS_FORMATTED|$(format_k "$SWIFT_STARS")|g" \
-    -e "s|SWIFT_DELTA_COLOR|$(delta_color "$SWIFT_DIFF")|g" \
-    -e "s|SWIFT_DELTA|$(format_delta "$SWIFT_DIFF")|g" \
-    "$TEMPLATES/swiftfin-card.svg" > "$OUT/swiftfin.svg"
+for variant in "" "-mobile"; do
+  sed -e "s|SWIFT_STARS_FORMATTED|$(format_k "$SWIFT_STARS")|g" \
+      -e "s|SWIFT_DELTA_COLOR|$(delta_color "$SWIFT_DIFF")|g" \
+      -e "s|SWIFT_DELTA|$(format_delta "$SWIFT_DIFF")|g" \
+      "$TEMPLATES/swiftfin-card$variant.svg" > "$OUT/swiftfin$variant.svg"
+done
 
 # ---------------------------------------------------------------------------
 # Plugin cards
@@ -160,14 +168,24 @@ for entry in "${PLUGINS[@]}"; do
       -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
       -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
       "$TEMPLATES/plugin-card.svg" > "$OUT/$id.svg"
+
+  # Mobile variant: fixed 800px-wide layout, no geometry substitution needed.
+  sed -e "s|PLUGIN_TITLE|$(esc "$title")|g" \
+      -e "s|PLUGIN_DESC|$(esc "$desc")|g" \
+      -e "s|PLUGIN_STARS|$stars|g" \
+      -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
+      -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
+      "$TEMPLATES/plugin-card-mobile.svg" > "$OUT/$id-mobile.svg"
 done
 
 # ---------------------------------------------------------------------------
 # Footer card (contact info + last-updated date)
 # ---------------------------------------------------------------------------
 
-sed -e "s|UPDATED|$(date -u +'%b %d, %Y')|g" \
-    "$TEMPLATES/footer-card.svg" > "$OUT/footer.svg"
+for variant in "" "-mobile"; do
+  sed -e "s|UPDATED|$(date -u +'%b %d, %Y')|g" \
+      "$TEMPLATES/footer-card$variant.svg" > "$OUT/footer$variant.svg"
+done
 
 # ---------------------------------------------------------------------------
 # Persist history (keep last 7 days)
