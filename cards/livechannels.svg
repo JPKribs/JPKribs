@@ -9,6 +9,6 @@
     <path d="M300.449 289.515H235.561V171H297.87V187.695H254.746V221.249H294.485V237.861H254.746V272.903H300.449V289.515Z" fill="white"/>
     <path d="M392.667 187.695H359.457V289.515H340.272V187.695H307.143V171H392.667V187.695Z" fill="white"/>
   </g>
-  <text x="101.875" y="139" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#8b949e">0 ★</text>
-  <text x="101.875" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#8b949e">--</text>
+  <text x="101.875" y="139" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#8b949e">1 ★</text>
+  <text x="101.875" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#3fb950">+1</text>
 </svg>
