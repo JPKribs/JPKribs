@@ -51,10 +51,10 @@ fi
 # — titles/descriptions are XML- and sed-escaped before substitution.
 # Alphabetical by display title: row 1 gets the first 4, row 2 the rest.
 PLUGINS=(
+  "poster|JPKribs/jellyfin-plugin-artworkgenerator|Artwork Generator|Custom Posters, Logos & Backdrops|203.75|10"
   "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages|203.75|10"
   "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager|203.75|10"
-  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries|203.75|10"
-  "poster|JPKribs/jellyfin-plugin-episodepostergenerator|Poster Generator|Custom Styling for Episode Posters|203.75|0"
+  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries|203.75|0"
   "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers|275|10"
   "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites|275|10"
   "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio|275|0"
