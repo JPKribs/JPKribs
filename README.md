@@ -9,9 +9,10 @@
       * ≥1280: desktop grid. Each card has a percentage width (GitHub
         keeps width="%" on images), so every row fills the column at any
         width. Rows and widths are computed from the plugin count.
-      * ≤1279: every plugin card swaps (via <picture><source>) to its
-        full-width "-mobile" variant, whose 1600px intrinsic width always
-        exceeds the column so max-width:100% scales it to fill exactly.
+      * ≤1011: every plugin card swaps (via <picture><source>) to its
+        "-mobile" tile, an icon and name with the same viewBox as the desktop
+        card, so it fills the same percentage slot and stays legible at a
+        quarter of a phone's column.
       * ≤767: the header/Swiftfin/footer cards also swap to mobile variants
         with larger type for phone legibility. They carry width="100%" so
         they fill the column at every size (the old width="800" capped them
@@ -19,8 +20,9 @@
   - Gaps are baked into the SVGs as transparent padding: desktop cards
     carry half the gutter on each inner edge (none on a row's outer edges,
     so rows line up flush with the full width cards) and a 10 unit bottom
-    pad (except the footer); mobile cards a 20px bottom pad, which
-    scales with the card so stacked gaps stay proportional.
+    pad (except the footer); the header, Swiftfin and footer
+    mobile cards a 20px bottom pad, which scales with the card so stacked
+    gaps stay proportional.
   - Rows use <div> (no margins, unlike <p>) and images are butted together
     with zero whitespace so widths are exact. All plugin cards live in one
     <div> that generate-cards.sh rebuilds between the plugins markers from
@@ -38,7 +40,7 @@
 <div align="center"><a href="https://github.com/jellyfin/Swiftfin"><picture><source media="(max-width: 767px)" srcset="cards/swiftfin-mobile.svg"><img src="cards/swiftfin.svg" alt="Swiftfin — Native Jellyfin Client for iOS and tvOS" align="top" width="100%"></picture></a></div>
 
 <!-- plugins:start -->
-<div align="center"><a href="https://github.com/JPKribs/jellyfin-plugin-artworkgenerator"><picture><source media="(max-width: 1279px)" srcset="cards/poster-mobile.svg"><img src="cards/poster.svg" alt="Artwork Generator" align="top" width="24.654%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-custompages"><picture><source media="(max-width: 1279px)" srcset="cards/custompages-mobile.svg"><img src="cards/custompages.svg" alt="Custom Pages" align="top" width="25.246%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-ddns"><picture><source media="(max-width: 1279px)" srcset="cards/ddns-mobile.svg"><img src="cards/ddns.svg" alt="DDNS" align="top" width="25.246%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-livechannels"><picture><source media="(max-width: 1279px)" srcset="cards/livechannels-mobile.svg"><img src="cards/livechannels.svg" alt="Live Channels" align="top" width="24.654%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-serversync"><picture><source media="(max-width: 1279px)" srcset="cards/sync-mobile.svg"><img src="cards/sync.svg" alt="Server Sync" align="top" width="33.086%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-usermanagement"><picture><source media="(max-width: 1279px)" srcset="cards/usermgmt-mobile.svg"><img src="cards/usermgmt.svg" alt="User Management" align="top" width="33.677%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-youtubeaudio"><picture><source media="(max-width: 1279px)" srcset="cards/youtube-mobile.svg"><img src="cards/youtube.svg" alt="YouTube Audio" align="top" width="33.086%"></picture></a></div>
+<div align="center"><a href="https://github.com/JPKribs/jellyfin-plugin-artworkgenerator"><picture><source media="(max-width: 1011px)" srcset="cards/poster-mobile.svg"><img src="cards/poster.svg" alt="Artwork Generator" align="top" width="24.654%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-custompages"><picture><source media="(max-width: 1011px)" srcset="cards/custompages-mobile.svg"><img src="cards/custompages.svg" alt="Custom Pages" align="top" width="25.246%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-ddns"><picture><source media="(max-width: 1011px)" srcset="cards/ddns-mobile.svg"><img src="cards/ddns.svg" alt="DDNS" align="top" width="25.246%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-livechannels"><picture><source media="(max-width: 1011px)" srcset="cards/livechannels-mobile.svg"><img src="cards/livechannels.svg" alt="Live Channels" align="top" width="24.654%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-serversync"><picture><source media="(max-width: 1011px)" srcset="cards/sync-mobile.svg"><img src="cards/sync.svg" alt="Server Sync" align="top" width="33.086%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-usermanagement"><picture><source media="(max-width: 1011px)" srcset="cards/usermgmt-mobile.svg"><img src="cards/usermgmt.svg" alt="User Management" align="top" width="33.677%"></picture></a><a href="https://github.com/JPKribs/jellyfin-plugin-youtubeaudio"><picture><source media="(max-width: 1011px)" srcset="cards/youtube-mobile.svg"><img src="cards/youtube.svg" alt="YouTube Audio" align="top" width="33.086%"></picture></a></div>
 <!-- plugins:end -->
 
 <div align="center"><a href="https://joseph.kribs.net"><picture><source media="(max-width: 767px)" srcset="cards/footer-mobile.svg"><img src="cards/footer.svg" alt="joseph.kribs.net • joseph@kribs.net • Littleton, CO" align="top" width="100%"></picture></a></div>

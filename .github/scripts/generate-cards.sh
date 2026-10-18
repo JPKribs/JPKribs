@@ -176,7 +176,7 @@ for i in "${!PLUGINS[@]}"; do
   IFS='|' read -r id repo title desc <<< "${PLUGINS[$i]}"
   read -r svg_w left vis pct <<< "${LAYOUT[$i]}"
   logo="data:image/png;base64,$(base64 < "logos/$id.png" | tr -d '\n')"
-  README_CARDS+="<a href=\"https://github.com/$repo\"><picture><source media=\"(max-width: 1279px)\" srcset=\"cards/$id-mobile.svg\"><img src=\"cards/$id.svg\" alt=\"$title\" align=\"top\" width=\"$pct%\"></picture></a>"
+  README_CARDS+="<a href=\"https://github.com/$repo\"><picture><source media=\"(max-width: 1011px)\" srcset=\"cards/$id-mobile.svg\"><img src=\"cards/$id.svg\" alt=\"$title\" align=\"top\" width=\"$pct%\"></picture></a>"
   echo "Fetching stars for $repo..." >&2
   stars=$(fetch_stars "$repo")
   stars=$(star_fallback "$stars" "${id}_stars")
@@ -202,14 +202,25 @@ for i in "${!PLUGINS[@]}"; do
       -e "s|PLUGIN_LOGO|$logo|g" \
       "$TEMPLATES/plugin-card.svg" > "$OUT/$id.svg"
 
-  # Mobile variant: fixed full-width layout. Its intrinsic size is 1600px
-  # (2× the 800 viewBox) so it always exceeds the README column and
-  # max-width:100% scales it to fill exactly.
-  sed -e "s|PLUGIN_TITLE|$(esc "$title")|g" \
-      -e "s|PLUGIN_DESC|$(esc "$desc")|g" \
-      -e "s|PLUGIN_STARS|$stars|g" \
-      -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
-      -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
+  # Phone variant: an app style tile with the same viewBox as the desktop
+  # card, so it drops into the same percentage width slot and rows still line
+  # up. A two word title wraps onto two lines so the text stays legible when
+  # the tile is only a quarter of a phone's column.
+  if [[ "$title" == *" "* ]]; then
+    line1="${title%% *}"; line2="${title#* }"; y1=124; y2=152
+  else
+    line1="$title"; line2=""; y1=138; y2=138
+  fi
+  icon_x=$(awk -v c="$center" 'BEGIN{printf "%g", c-38}')
+  sed -e "s|SVG_W|$svg_w|g" \
+      -e "s|RECT_X|$rect_x|g" \
+      -e "s|RECT_W|$rect_w|g" \
+      -e "s|CENTER|$center|g" \
+      -e "s|ICON_X|$icon_x|g" \
+      -e "s|TITLE_Y1|$y1|g" \
+      -e "s|TITLE_Y2|$y2|g" \
+      -e "s|TITLE_L1|$(esc "$line1")|g" \
+      -e "s|TITLE_L2|$(esc "$line2")|g" \
       -e "s|PLUGIN_LOGO|$logo|g" \
       "$TEMPLATES/plugin-card-mobile.svg" > "$OUT/$id-mobile.svg"
 done

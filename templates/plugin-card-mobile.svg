@@ -1,8 +1,6 @@
-<svg width="1600" height="300" viewBox="0 0 800 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="1.5" y="1.5" width="797" height="127" rx="20" fill="#161b22" stroke="#FFD700" stroke-width="3"/>
-  <image x="32" y="31" width="68.4" height="68.4" href="PLUGIN_LOGO"/>
-  <text x="124" y="58" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#f0f6fc">PLUGIN_TITLE</text>
-  <text x="124" y="88" font-family="Arial, sans-serif" font-size="16" fill="#8b949e">PLUGIN_DESC</text>
-  <text x="755" y="60" text-anchor="end" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#f0f6fc">PLUGIN_STARS ★</text>
-  <text x="755" y="86" text-anchor="end" font-family="Arial, sans-serif" font-size="14" fill="PLUGIN_DELTA_COLOR">PLUGIN_DELTA</text>
+<svg width="SVG_W" height="175" viewBox="0 0 SVG_W 175" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="RECT_X" y="0.75" width="RECT_W" height="163.5" rx="16" fill="#161b22" stroke="#FFD700" stroke-width="2"/>
+  <image x="ICON_X" y="14" width="76" height="76" href="PLUGIN_LOGO"/>
+  <text x="CENTER" y="TITLE_Y1" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="bold" fill="#f0f6fc">TITLE_L1</text>
+  <text x="CENTER" y="TITLE_Y2" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="bold" fill="#f0f6fc">TITLE_L2</text>
 </svg>
