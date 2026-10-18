@@ -24,6 +24,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add cards stats-history.json
+          git add cards stats-history.json README.md
           git commit -m "chore: update profile cards with latest stats" || exit 0
           git push

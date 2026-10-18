@@ -29,36 +29,56 @@ if [ -n "$TOKEN" ]; then
   AUTH=(-H "Authorization: Bearer ${TOKEN}")
 fi
 
-# id | repo | display title | description | visible width | right gutter.
+# id | repo | display title | description.
 #
-# The id doubles as the output filename and the stats-history.json key prefix
-# (<id>_stars) — existing ids must not change or delta history resets.
+# The id doubles as the output filename, the logo filename (logos/<id>.png)
+# and the stats-history.json key prefix (<id>_stars). Existing ids must not
+# change or delta history resets.
 #
-# Layout: the desktop grid only ever shows on github.com viewports ≥1280px,
-# where the profile README column is a FIXED 846px (measured Jul 2026; the
-# column is fluid below that, and the README swaps to full-width mobile
-# cards there — see the README's <picture> sources). Rows are therefore
-# static and sized to fill the column flush, flex-grow style:
-#   row 1: 4 cards × 203.75 visible + 3×10 gutters = 845
-#   row 2: 3 cards × 275    visible + 2×10 gutters = 845
-# (845, not 846, leaves 1px slack so subpixel rounding can never overflow
-# the column and wrap a card.) The gutter is transparent right-side padding
-# baked into the SVG; the last card of each row has none. Every card
-# template also carries a 10px transparent bottom pad (footer excepted) so
-# vertical gaps match the horizontal ones exactly.
-# Descriptions must stay short enough for the ~204px row-1 cards (~34 chars
-# at 10px) and must not contain "|" (the field delimiter). Plain "&" is fine
-# — titles/descriptions are XML- and sed-escaped before substitution.
-# Alphabetical by display title: row 1 gets the first 4, row 2 the rest.
+# Layout: the desktop grid is variable and fluid. Plugins fill rows of at
+# most MAX_PER_ROW cards and rows are balanced (7 plugins become 4 + 3, 8
+# become 4 + 4, 5 become 3 + 2). GitHub strips CSS but keeps percentage
+# widths on images, so every card gets its share of the row as a percentage
+# (minus a hair) and the row fills the column at any width without wrapping.
+# Visible cards in a row are equal, gaps are transparent padding that scales
+# with the row, and every row is ROW_W viewBox units wide, so card heights
+# match across rows. Every card also carries a 10 unit transparent bottom pad.
+# Descriptions must stay short enough for a four card row (~34 chars at 10px)
+# and must not contain "|". Plain "&" is fine, text is XML and sed escaped.
+# Alphabetical by display title.
 PLUGINS=(
-  "poster|JPKribs/jellyfin-plugin-artworkgenerator|Artwork Generator|Custom Posters, Logos & Backdrops|203.75|10"
-  "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages|203.75|10"
-  "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager|203.75|10"
-  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries|203.75|0"
-  "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers|275|10"
-  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites|275|10"
-  "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio|275|0"
+  "poster|JPKribs/jellyfin-plugin-artworkgenerator|Artwork Generator|Custom Posters, Logos & Backdrops"
+  "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages"
+  "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager"
+  "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries"
+  "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers"
+  "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites"
+  "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio"
 )
+
+MAX_PER_ROW=4
+ROW_W=846
+GUTTER=10
+
+# Prints "svg_width left_pad visible_width percent" for each plugin in order, balancing
+# the rows. Visible cards in a row are equal. Inner edges carry half the
+# gutter as transparent padding and outer edges none, so a row lines up flush
+# with the full width cards above and below it.
+plugin_layout() {
+  awk -v n="${#PLUGINS[@]}" -v max="$MAX_PER_ROW" -v row="$ROW_W" -v gut="$GUTTER" 'BEGIN {
+    rows = int((n + max - 1) / max)
+    base = int(n / rows); extra = n % rows
+    for (r = 0; r < rows; r++) {
+      k = base + (r < extra ? 1 : 0)
+      vis = (row - gut * (k - 1)) / k
+      for (c = 0; c < k; c++) {
+        left = (c == 0 ? 0 : gut / 2); right = (c == k - 1 ? 0 : gut / 2)
+        w = vis + left + right
+        printf "%g %g %g %.3f\n", w, left, vis, w / row * 100 - 0.05
+      }
+    }
+  }'
+}
 
 # Escape free text for substitution into the SVG templates: XML-encode
 # (& < >), then backslash-escape sed replacement metacharacters (\ and &).
@@ -150,21 +170,27 @@ done
 # Plugin cards
 # ---------------------------------------------------------------------------
 
-for entry in "${PLUGINS[@]}"; do
-  IFS='|' read -r id repo title desc width gutter <<< "$entry"
+mapfile -t LAYOUT < <(plugin_layout)
+README_CARDS=""
+for i in "${!PLUGINS[@]}"; do
+  IFS='|' read -r id repo title desc <<< "${PLUGINS[$i]}"
+  read -r svg_w left vis pct <<< "${LAYOUT[$i]}"
+  logo="data:image/png;base64,$(base64 < "logos/$id.png" | tr -d '\n')"
+  README_CARDS+="<a href=\"https://github.com/$repo\"><picture><source media=\"(max-width: 1279px)\" srcset=\"cards/$id-mobile.svg\"><img src=\"cards/$id.svg\" alt=\"$title\" align=\"top\" width=\"$pct%\"></picture></a>"
   echo "Fetching stars for $repo..." >&2
   stars=$(fetch_stars "$repo")
   stars=$(star_fallback "$stars" "${id}_stars")
   diff=$((stars - $(hist_old "${id}_stars")))
   entry_set "${id}_stars" "$stars"
 
-  # Geometry from card width: total SVG width includes the transparent
-  # gutter; contents center on the visible card, whose rect is inset 0.75
-  # for the 1.5 stroke; the 59.3-wide logo is centered.
-  read -r svg_w rect_w center logo_x <<< "$(awk -v w="$width" -v g="$gutter" \
-    'BEGIN{printf "%g %g %g %g", w+g, w-1.5, w/2, w/2-29.65}')"
+  # Geometry: the visible card starts after the left padding, its rect is
+  # inset 0.75 for the 1.5 stroke, and the title, text and 59.3 wide logo
+  # center on it.
+  read -r rect_x rect_w center logo_x <<< "$(awk -v l="$left" -v v="$vis" \
+    'BEGIN{printf "%g %g %g %g", l+0.75, v-1.5, l+v/2, l+v/2-29.65}')"
 
   sed -e "s|SVG_W|$svg_w|g" \
+      -e "s|RECT_X|$rect_x|g" \
       -e "s|RECT_W|$rect_w|g" \
       -e "s|CENTER|$center|g" \
       -e "s|LOGO_X|$logo_x|g" \
@@ -173,6 +199,7 @@ for entry in "${PLUGINS[@]}"; do
       -e "s|PLUGIN_STARS|$stars|g" \
       -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
       -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
+      -e "s|PLUGIN_LOGO|$logo|g" \
       "$TEMPLATES/plugin-card.svg" > "$OUT/$id.svg"
 
   # Mobile variant: fixed full-width layout. Its intrinsic size is 1600px
@@ -183,8 +210,17 @@ for entry in "${PLUGINS[@]}"; do
       -e "s|PLUGIN_STARS|$stars|g" \
       -e "s|PLUGIN_DELTA_COLOR|$(delta_color "$diff")|g" \
       -e "s|PLUGIN_DELTA|$(format_delta "$diff")|g" \
+      -e "s|PLUGIN_LOGO|$logo|g" \
       "$TEMPLATES/plugin-card-mobile.svg" > "$OUT/$id-mobile.svg"
 done
+
+# The README's plugin row is rebuilt from PLUGINS, so adding a plugin above
+# is all it takes to grow the grid.
+awk -v cards="$README_CARDS" '
+  /<!-- plugins:start -->/ { print; print "<div align=\"center\">" cards "</div>"; skip = 1; next }
+  /<!-- plugins:end -->/ { skip = 0 }
+  !skip
+' README.md > README.tmp && mv README.tmp README.md
 
 # ---------------------------------------------------------------------------
 # Footer card (contact info + last-updated date)
