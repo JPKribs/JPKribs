@@ -1,5 +1,16 @@
 [
   {
+    "date": "2026-10-21",
+    "swift_stars": 4224,
+    "poster_stars": 9,
+    "custompages_stars": 0,
+    "ddns_stars": 0,
+    "livechannels_stars": 2,
+    "sync_stars": 8,
+    "usermgmt_stars": 0,
+    "youtube_stars": 3
+  },
+  {
     "date": "2026-10-20",
     "swift_stars": 4220,
     "poster_stars": 9,
@@ -57,17 +68,6 @@
   {
     "date": "2026-10-15",
     "swift_stars": 4212,
-    "poster_stars": 9,
-    "custompages_stars": 0,
-    "ddns_stars": 0,
-    "livechannels_stars": 2,
-    "sync_stars": 8,
-    "usermgmt_stars": 0,
-    "youtube_stars": 3
-  },
-  {
-    "date": "2026-10-14",
-    "swift_stars": 4211,
     "poster_stars": 9,
     "custompages_stars": 0,
     "ddns_stars": 0,
