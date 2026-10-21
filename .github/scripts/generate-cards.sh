@@ -49,8 +49,8 @@ fi
 PLUGINS=(
   "poster|JPKribs/jellyfin-plugin-artworkgenerator|Artwork Generator|Custom Posters, Logos & Backdrops"
   "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages"
-  "ddns|JPKribs/jellyfin-plugin-ddns|DDNS|Simple DDNS Manager"
   "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries"
+  "ddns|JPKribs/jellyfin-plugin-remoteaccess|Remote Access|DDNS & Secure Remote Access"
   "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers"
   "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites"
   "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio"
