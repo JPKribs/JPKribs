@@ -51,6 +51,7 @@ PLUGINS=(
   "custompages|JPKribs/jellyfin-plugin-custompages|Custom Pages|Permission Gated Custom Pages"
   "livechannels|JPKribs/jellyfin-plugin-livechannels|Live Channels|Live TV Channels from Libraries"
   "ddns|JPKribs/jellyfin-plugin-remoteaccess|Remote Access|DDNS & Secure Remote Access"
+  "scripts|JPKribs/jellyfin-plugin-scripts|Scripts|Run Actions & Scripts on Events"
   "sync|JPKribs/jellyfin-plugin-serversync|Server Sync|Sync Multiple Jellyfin Servers"
   "usermgmt|JPKribs/jellyfin-plugin-usermanagement|User Management|Group Management & User Invites"
   "youtube|JPKribs/jellyfin-plugin-youtubeaudio|YouTube Audio|Extract YouTube Audio"
